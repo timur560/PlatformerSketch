@@ -1,8 +1,4 @@
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
@@ -17,6 +13,7 @@ public class Player {
     private static int interations = 5;
 
     private Shape player;
+    private Animation player1;
     private StaticLevel level;
 
     private float vX = 0;
@@ -27,12 +24,16 @@ public class Player {
     }
 
     public void init(GameContainer gc) throws SlickException {
-        player = new Rectangle(200, 200, 45, 45);
+        SpriteSheet sheet = new SpriteSheet("/res/images/mario.png",40,40);
+        player = new Rectangle(100, 100, 45, 45);
+        player1 = new Animation(sheet, new int[]{0,2,1,2}, new int[]{200,200});
+        player1.setAutoUpdate(true);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.setColor(Color.red);
         g.draw(player);
+        player1.draw(100, 100);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
@@ -101,14 +102,6 @@ public class Player {
             if (level.getOffset() < Math.abs(vXtemp)) level.setOffset(0);
             vX = 0;
         }
-
-//        else if () {
-//            } else if (player.getX() < 300) {
-//                player.setX(player.getX() + vXtemp);
-//                level.setOffset(vXtemp);
-//                vX = 0;
-//            }}
-//        }
 
     }
 }

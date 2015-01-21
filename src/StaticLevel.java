@@ -19,28 +19,44 @@ public class StaticLevel {
 
     public void init(GameContainer gc) throws SlickException {
 
-        float[] polygonPoints = new float[]
+        platforms = new ArrayList<Shape>();
+
+        platforms.add(new Polygon(new float[]
+                {
+                        0,0,
+                        50,0,
+                        50,550,
+                        1300,550,
+                        1300,600,
+                        0,600
+                }));
+        platforms.add(new Polygon(new float[]
             {
-                    0,0,
-                    50,0,
-                    50,550,
+                    1700,550,
                     1950,550,
-                    1950,350,
-                    1800,350,
-                    1800,300,
-                    1950,300,
+                1950,350,
+                1800,350,
+                1800,300,
+                1950,300,
                     1950,0,
                     2000,0,
                     2000,600,
-                    0,600
-            };
-
-        platforms = new ArrayList<Shape>();
-        platforms.add(new Polygon(polygonPoints));
-        platforms.add(new Rectangle(200,300,100,50));
+                    1700,600
+            }));
+        // platforms.add(new Rectangle(200,300,100,50));
+        platforms.add(new Polygon(new float[]{
+                100,300,
+                200,300,
+                    200,200,
+                    250,200,
+                250,300,
+                400,300,
+                400,350,
+                100,350
+        }));
         platforms.add(new Rectangle(500,400,100,50));
         platforms.add(new Rectangle(800,300,200,50));
-        platforms.add(new Rectangle(1200,150,200,50));
+        platforms.add(new Rectangle(1250,150,100,50));
 
     }
 
