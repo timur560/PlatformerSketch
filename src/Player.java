@@ -30,16 +30,13 @@ public class Player {
         int[] animationSpeed = new int[10];
         for (int i = 0; i <= 9; i++) animationSpeed[i] = 70;
 
-        goLeft = new Animation(sheet,
-                new int[]{0,5,1,5,2,5,3,5,4,5,5,5,6,5,7,5,8,5,9,5},
-                animationSpeed);
-        goRight = new Animation(sheet,
-                new int[]{0,7,1,7,2,7,3,7,4,7,5,7,6,7,7,7,8,7,9,7},
-                animationSpeed);
+        goLeft = new Animation(sheet, new int[]{0,5,1,5,2,5,3,5,4,5,5,5,6,5,7,5,8,5,9,5}, animationSpeed);
+        goRight = new Animation(sheet, new int[]{0,7,1,7,2,7,3,7,4,7,5,7,6,7,7,7,8,7,9,7}, animationSpeed);
         stayLeft = new Animation(sheet, new int[]{0,5}, new int[]{200});
         stayRight = new Animation(sheet, new int[]{9,7}, new int[]{200});
         jumpLeft = new Animation(sheet, new int[]{0,1}, new int[]{200});
         jumpRight = new Animation(sheet, new int[]{0,3}, new int[]{200});
+
         current = stayRight;
     }
 
@@ -64,7 +61,14 @@ public class Player {
         // Y Movement-Collisions
         float vYtemp = vY/interations;
 
-        if (player.getY() + vY > Platformer.HEIGHT - 300) {
+        if (level.getOffsetTop() > level.HEIGHT - Platformer.HEIGHT) {
+            level.setOffsetTop(level.HEIGHT - Platformer.HEIGHT);
+        }
+
+        if ((player.getY() + vY > Platformer.HEIGHT - 300
+                && level.getOffsetTop() < level.HEIGHT - Platformer.HEIGHT)
+                || (player.getY() + vY < 300 && level.getOffsetTop() > 0)
+                ) {
             for (int i = 0; i < interations; i++) {
                 level.setOffsetTop(level.getOffsetTop() + vYtemp);
                 player.setY(player.getY() + vYtemp);
@@ -125,7 +129,9 @@ public class Player {
         // set level horizontal offset
         vXtemp = vX;
 
-        if (level.getOffsetLeft() > level.WIDTH - Platformer.WIDTH) level.setOffsetLeft(level.WIDTH - Platformer.WIDTH);
+        if (level.getOffsetLeft() > level.WIDTH - Platformer.WIDTH) {
+            level.setOffsetLeft(level.WIDTH - Platformer.WIDTH);
+        }
 
         if (player.getX() > Platformer.WIDTH - 300 && level.getOffsetLeft() < level.WIDTH - Platformer.WIDTH) {
             player.setX(player.getX() - vXtemp);
