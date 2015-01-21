@@ -17,7 +17,7 @@ public class Game extends BasicGame
         level = new StaticLevel();
         level.init(gc);
 
-        player = new Player( level );
+        player = new Player(level);
         player.init(gc);
     }
 
@@ -36,7 +36,7 @@ public class Game extends BasicGame
     // Draw a grid on the screen for easy positioning
     public void drawDebugLines(Graphics g, int size) {
         int resolution = 800;
-        g.setColor( Color.darkGray);
+        g.setColor(Color.darkGray);
         for( int i = 0; i < resolution; i += size)
         {
             g.drawLine(i, 0, i, resolution);

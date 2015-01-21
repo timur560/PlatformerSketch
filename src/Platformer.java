@@ -6,13 +6,16 @@ import org.newdawn.slick.SlickException;
 
 public class Platformer {
 
+    public static int WIDTH = 800;
+    public static int HEIGHT = 600;
+
     public static void main(String[] args) {
         System.setProperty("org.lwjgl.librarypath", new File(new File(System.getProperty("user.dir"), "native"),
                 LWJGLUtil.getPlatformName()).getAbsolutePath());
 
         try {
             AppGameContainer app = new AppGameContainer(new Game());
-            app.setDisplayMode(800, 600, false);
+            app.setDisplayMode(WIDTH, HEIGHT, false);
             app.setVSync(true);
             app.start();
         } catch (SlickException e) {

@@ -19,7 +19,6 @@ public class Player {
     private Shape player;
     private StaticLevel level;
 
-
     private float vX = 0;
     private float vY = 0;
 
@@ -86,5 +85,30 @@ public class Player {
                 vX = 0;
             }
         }
+
+        // set level horizontal offset
+        vXtemp = vX;
+
+        if (level.getOffset() > level.WIDTH - Platformer.WIDTH) level.setOffset(level.WIDTH - Platformer.WIDTH);
+
+        if (player.getX() > Platformer.WIDTH - 300 && level.getOffset() < level.WIDTH - Platformer.WIDTH) {
+            player.setX(player.getX() - vXtemp);
+            level.setOffset(level.getOffset() + vXtemp);
+            vX = 0;
+        } else if (player.getX() < 300 && level.getOffset() > 0) {
+            player.setX(player.getX() - vXtemp);
+            if (level.getOffset() + vXtemp >= 0) level.setOffset(level.getOffset() + vXtemp);
+            if (level.getOffset() < Math.abs(vXtemp)) level.setOffset(0);
+            vX = 0;
+        }
+
+//        else if () {
+//            } else if (player.getX() < 300) {
+//                player.setX(player.getX() + vXtemp);
+//                level.setOffset(vXtemp);
+//                vX = 0;
+//            }}
+//        }
+
     }
 }
