@@ -10,7 +10,7 @@ public class Game extends BasicGame
     private Player player;
 
     public Game() throws SlickException {
-        super("Coding Quick Tips");
+        super("Platformer Sketch");
     }
 
     public void init(GameContainer gc) throws SlickException {
@@ -22,7 +22,7 @@ public class Game extends BasicGame
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        // drawDebugLines(g , 50);
+        drawDebugLines(g , 50);
 
         level.render(gc, g);
         player.render(gc, g);

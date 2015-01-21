@@ -13,9 +13,9 @@ public class StaticLevel {
     private List<Shape> platforms;
 
     public static float WIDTH = 2000;
-    public static float HEIGHT = 600;
+    public static float HEIGHT = 900;
 
-    private float offset = 0, offsetTmp = 0;
+    private float offsetLeft = 0, offsetLeftTmp = 0, offsetTop = 0, offsetTopTmp = 0;
 
     public void init(GameContainer gc) throws SlickException {
 
@@ -25,11 +25,14 @@ public class StaticLevel {
                 {
                         0,0,
                         50,0,
-                        50,550,
-                        1300,550,
-                        1300,600,
-                        0,600
+                        50,850,
+                        1300,850,
+                        1300,900,
+                        0,900
                 }));
+        platforms.add(new Rectangle(1350, 750, 200, 25));
+        platforms.add(new Rectangle(650, 600, 200, 25));
+        platforms.add(new Rectangle(1000, 550, 200, 25));
         platforms.add(new Polygon(new float[]
             {
                     1700,550,
@@ -43,20 +46,13 @@ public class StaticLevel {
                     2000,600,
                     1700,600
             }));
-        // platforms.add(new Rectangle(200,300,100,50));
-        platforms.add(new Polygon(new float[]{
-                100,300,
-                200,300,
-                    200,200,
-                    250,200,
-                250,300,
-                400,300,
-                400,350,
-                100,350
-        }));
-        platforms.add(new Rectangle(500,400,100,50));
-        platforms.add(new Rectangle(800,300,200,50));
-        platforms.add(new Rectangle(1250,150,100,50));
+        platforms.add(new Rectangle(200,300,100,25));
+//        platforms.add(new Rectangle(500,400,100,25));
+        platforms.add(new Rectangle(600,350,100,25));
+        platforms.add(new Rectangle(800,300,200,25));
+        platforms.add(new Rectangle(1050,250,200,25));
+        platforms.add(new Rectangle(1450,450,200,25));
+        platforms.add(new Rectangle(1250,150,150,25));
 
     }
 
@@ -70,9 +66,11 @@ public class StaticLevel {
 
     public void update(GameContainer gc, int delta) throws SlickException {
         for (Shape p : platforms) {
-            p.setX(p.getX() + (offsetTmp - offset));
+            p.setX(p.getX() + (offsetLeftTmp - offsetLeft));
+            p.setY(p.getY() + (offsetTopTmp - offsetTop));
         }
-        offsetTmp = offset;
+        offsetLeftTmp = offsetLeft;
+        offsetTopTmp = offsetTop;
     }
 
     public boolean collidesWith (Shape s) {
@@ -83,11 +81,19 @@ public class StaticLevel {
         return false;
     }
 
-    public float getOffset() {
-        return offset;
+    public float getOffsetLeft() {
+        return offsetLeft;
     }
 
-    public void setOffset(float offset) {
-        this.offset = offset;
+    public void setOffsetLeft(float offsetLeft) {
+        this.offsetLeft = offsetLeft;
+    }
+
+    public float getOffsetTop() {
+        return offsetTop;
+    }
+
+    public void setOffsetTop(float offsetTop) {
+        this.offsetTop = offsetTop;
     }
 }
