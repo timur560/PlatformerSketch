@@ -12,10 +12,8 @@ import java.util.List;
 public class StaticLevel {
     private List<Shape> platforms;
 
-    public static float WIDTH = 2000;
-    public static float HEIGHT = 900;
-
-    private float offsetLeft = 0, offsetLeftTmp = 0, offsetTop = 0, offsetTopTmp = 0;
+    public float WIDTH = 2000;
+    public float HEIGHT = 900;
 
     public void init(GameContainer gc) throws SlickException {
 
@@ -65,12 +63,7 @@ public class StaticLevel {
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-        for (Shape p : platforms) {
-            p.setX(p.getX() + (offsetLeftTmp - offsetLeft));
-            p.setY(p.getY() + (offsetTopTmp - offsetTop));
-        }
-        offsetLeftTmp = offsetLeft;
-        offsetTopTmp = offsetTop;
+
     }
 
     public boolean collidesWith (Shape s) {
@@ -81,19 +74,4 @@ public class StaticLevel {
         return false;
     }
 
-    public float getOffsetLeft() {
-        return offsetLeft;
-    }
-
-    public void setOffsetLeft(float offsetLeft) {
-        this.offsetLeft = offsetLeft;
-    }
-
-    public float getOffsetTop() {
-        return offsetTop;
-    }
-
-    public void setOffsetTop(float offsetTop) {
-        this.offsetTop = offsetTop;
-    }
 }

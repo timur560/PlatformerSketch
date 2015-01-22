@@ -24,6 +24,20 @@ public class Game extends BasicGame
     public void render(GameContainer gc, Graphics g) throws SlickException {
         //drawDebugLines(g , 50);
 
+        // calculate offset
+        float xOffset = 0, yOffset = 0;
+
+        if (player.getX() - 300 > level.WIDTH - Platformer.WIDTH) xOffset = level.WIDTH - Platformer.WIDTH;
+        else if (player.getX() < 300) xOffset = 0;
+        else xOffset = player.getX() - 300;
+
+        if (player.getY() - 300> level.HEIGHT - Platformer.HEIGHT) yOffset = level.HEIGHT - Platformer.HEIGHT;
+        else if (player.getY() < 300) yOffset = 0;
+        else yOffset = player.getY() - 300;
+
+        g.translate(-xOffset, -yOffset);
+
+        // render
         level.render(gc, g);
         player.render(gc, g);
     }

@@ -10,7 +10,7 @@ public class Player {
     private static float currentSpeed = 0;
     private float inertion = 0.9f;
 
-    private int interations = 1;
+    private int interations = 5;
 
     private Shape player;
     private Animation goLeft, goRight, stayLeft, stayRight, jumpRight, jumpLeft, current;
@@ -61,30 +61,11 @@ public class Player {
         // Y Movement-Collisions
         float vYtemp = vY/interations;
 
-        if (level.getOffsetTop() > level.HEIGHT - Platformer.HEIGHT) {
-            level.setOffsetTop(level.HEIGHT - Platformer.HEIGHT);
-        }
-
-        if ((player.getY() + vY > Platformer.HEIGHT - 300
-                && level.getOffsetTop() < level.HEIGHT - Platformer.HEIGHT)
-                || (player.getY() + vY < 300 && level.getOffsetTop() > 0)
-                ) {
-            for (int i = 0; i < interations; i++) {
-                level.setOffsetTop(level.getOffsetTop() + vYtemp);
-                player.setY(player.getY() + vYtemp);
-                if (level.collidesWith(player)) {
-                    level.setOffsetTop(level.getOffsetTop() - vYtemp);
-                    vY = 0;
-                }
+        for (int i = 0; i < interations; i++) {
+            player.setY(player.getY() + vYtemp);
+            if (level.collidesWith(player)) {
                 player.setY(player.getY() - vYtemp);
-            }
-        } else {
-            for (int i = 0; i < interations; i++) {
-                player.setY(player.getY() + vYtemp);
-                if (level.collidesWith(player)) {
-                    player.setY(player.getY() - vYtemp);
-                    vY = 0;
-                }
+                vY = 0;
             }
         }
 
@@ -127,23 +108,30 @@ public class Player {
         }
 
         // set level horizontal offset
-        vXtemp = vX;
+//        vXtemp = vX;
+//
+//        if (level.getOffsetLeft() > level.WIDTH - Platformer.WIDTH) {
+//            level.setOffsetLeft(level.WIDTH - Platformer.WIDTH);
+//        }
+//
+//        if (player.getX() > Platformer.WIDTH - 300 && level.getOffsetLeft() < level.WIDTH - Platformer.WIDTH) {
+//            player.setX(player.getX() - vXtemp);
+//            level.setOffsetLeft(level.getOffsetLeft() + vXtemp);
+//            vX = 0;
+//        } else if (player.getX() < 300 && level.getOffsetLeft() > 0) {
+//            player.setX(player.getX() - vXtemp);
+//            if (level.getOffsetLeft() + vXtemp >= 0) level.setOffsetLeft(level.getOffsetLeft() + vXtemp);
+//            if (level.getOffsetLeft() < Math.abs(vXtemp)) level.setOffsetLeft(0);
+//            vX = 0;
+//        }
 
-        if (level.getOffsetLeft() > level.WIDTH - Platformer.WIDTH) {
-            level.setOffsetLeft(level.WIDTH - Platformer.WIDTH);
-        }
+    }
 
-        if (player.getX() > Platformer.WIDTH - 300 && level.getOffsetLeft() < level.WIDTH - Platformer.WIDTH) {
-            player.setX(player.getX() - vXtemp);
-            level.setOffsetLeft(level.getOffsetLeft() + vXtemp);
-            vX = 0;
-        } else if (player.getX() < 300 && level.getOffsetLeft() > 0) {
-            player.setX(player.getX() - vXtemp);
-            if (level.getOffsetLeft() + vXtemp >= 0) level.setOffsetLeft(level.getOffsetLeft() + vXtemp);
-            if (level.getOffsetLeft() < Math.abs(vXtemp)) level.setOffsetLeft(0);
-            vX = 0;
-        }
+    public float getX() {
+        return player.getX();
+    }
 
-
+    public float getY() {
+        return player.getY();
     }
 }
