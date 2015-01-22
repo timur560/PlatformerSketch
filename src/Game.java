@@ -6,7 +6,7 @@ import org.newdawn.slick.SlickException;
 
 public class Game extends BasicGame
 {
-    private StaticLevel level;
+    private Level level;
     private Player player;
 
     public Game() throws SlickException {
@@ -14,7 +14,7 @@ public class Game extends BasicGame
     }
 
     public void init(GameContainer gc) throws SlickException {
-        level = new StaticLevel();
+        level = new Level();
         level.init(gc);
 
         player = new Player(level);
@@ -22,16 +22,16 @@ public class Game extends BasicGame
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        //drawDebugLines(g , 50);
+        if (Platformer.DEBUG_MODE) drawDebugLines(g, 50);
 
         // calculate offset
         float xOffset = 0, yOffset = 0;
 
-        if (player.getX() - 300 > level.WIDTH - Platformer.WIDTH) xOffset = level.WIDTH - Platformer.WIDTH;
+        if (player.getX() - 300 > level.getWidth() - Platformer.WIDTH) xOffset = level.getWidth() - Platformer.WIDTH;
         else if (player.getX() < 300) xOffset = 0;
         else xOffset = player.getX() - 300;
 
-        if (player.getY() - 300> level.HEIGHT - Platformer.HEIGHT) yOffset = level.HEIGHT - Platformer.HEIGHT;
+        if (player.getY() - 300> level.getHeight() - Platformer.HEIGHT) yOffset = level.getHeight() - Platformer.HEIGHT;
         else if (player.getY() < 300) yOffset = 0;
         else yOffset = player.getY() - 300;
 

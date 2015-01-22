@@ -14,18 +14,17 @@ public class Player {
 
     private Shape player;
     private Animation goLeft, goRight, stayLeft, stayRight, jumpRight, jumpLeft, current;
-    private StaticLevel level;
+    private Level level;
 
     private float vX = 0;
     private float vY = 0;
 
-    public Player(StaticLevel level) {
+    public Player(Level level) {
         this.level = level;
     }
 
     public void init(GameContainer gc) throws SlickException {
-        // SpriteSheet sheet = new SpriteSheet(new Image("/res/images/mario.png"), 39, 38);
-        SpriteSheet sheet = new SpriteSheet(new Image("/res/images/sprite.png"), 120, 130);
+        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/sprite.png").getFile()), 120, 130);
         player = new Rectangle(100, 100, 120, 130);
         int[] animationSpeed = new int[10];
         for (int i = 0; i <= 9; i++) animationSpeed[i] = 70;
@@ -41,7 +40,7 @@ public class Player {
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        g.setColor(Color.red);
+        if (Platformer.DEBUG_MODE) g.setColor(Color.red);
         g.draw(player);
         current.draw(player.getX() - 8, player.getY());
     }
