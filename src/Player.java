@@ -4,7 +4,7 @@ import org.newdawn.slick.geom.Shape;
 
 public class Player {
 
-    private float gravity = 0.5f;
+    private float gravity = 0.7f;
     private float jumpStrength = -15;
     private float speed = 7;
     private static float currentSpeed = 0;
@@ -24,34 +24,47 @@ public class Player {
     }
 
     public void init(GameContainer gc) throws SlickException {
-        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/sprite.png").getFile()), 120, 130);
-        player = new Rectangle(100, 100, 120, 130);
-        int[] animationSpeed = new int[10];
-        for (int i = 0; i <= 9; i++) animationSpeed[i] = 70;
+        // SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/sprite.png").getFile()), 120, 130);
+//        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/bt_sprite2.png").getFile()), 50, 50);
+        player = new Rectangle(100, 100, 45, 45); // 120, 130);
+//        int[] animationSpeed = new int[5];
+//        for (int i = 0; i <= 4; i++) animationSpeed[i] = 120;
 
-        goLeft = new Animation(sheet, new int[]{0,5,1,5,2,5,3,5,4,5,5,5,6,5,7,5,8,5,9,5}, animationSpeed);
-        goRight = new Animation(sheet, new int[]{0,7,1,7,2,7,3,7,4,7,5,7,6,7,7,7,8,7,9,7}, animationSpeed);
-        stayLeft = new Animation(sheet, new int[]{0,5}, new int[]{200});
-        stayRight = new Animation(sheet, new int[]{9,7}, new int[]{200});
-        jumpLeft = new Animation(sheet, new int[]{0,1}, new int[]{200});
-        jumpRight = new Animation(sheet, new int[]{0,3}, new int[]{200});
+//        goLeft = new Animation(sheet, new int[]{0,5,1,5,2,5,3,5,4,5,5,5,6,5,7,5,8,5,9,5}, animationSpeed);
+//        goRight = new Animation(sheet, new int[]{0,7,1,7,2,7,3,7,4,7,5,7,6,7,7,7,8,7,9,7}, animationSpeed);
+//        stayLeft = new Animation(sheet, new int[]{0,5}, new int[]{200});
+//        stayRight = new Animation(sheet, new int[]{9,7}, new int[]{200});
+//        jumpLeft = new Animation(sheet, new int[]{0,1}, new int[]{200});
+//        jumpRight = new Animation(sheet, new int[]{0,3}, new int[]{200});
 
         current = stayRight;
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if (Platformer.DEBUG_MODE) g.setColor(Color.red);
-        g.draw(player);
-        current.draw(player.getX() - 8, player.getY());
+        g.setColor(Color.red);
+        // if (Platformer.DEBUG_MODE)
+            g.draw(player);
+        // current.draw(player.getX()-8, player.getY()-11);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
 
+        // ladder collision
+        if (gc.getInput().isKeyDown(Input.KEY_UP)) {
+            if (level.collidesWithLadder(player)) {
+                player.setY(player.getY() - speed);
+            }
+            if (level.collidesWith(player)) player.setY(player.getY() + speed);
+        } else if (gc.getInput().isKeyDown(Input.KEY_DOWN)) {
+            player.setY(player.getY() + speed);
+            if (level.collidesWith(player)) player.setY(player.getY() - speed);
+        }
+
         // Y acceleration
         vY += gravity;
-        if (gc.getInput().isKeyDown(Input.KEY_UP)) {
+        if (gc.getInput().isKeyDown(Input.KEY_TAB)) {
             player.setY(player.getY() + 0.5f);
-            if (level.collidesWith(player)) {
+            if (level.collidesWith(player) || level.collidesWithLadder(player)) {
                 vY = jumpStrength;
             }
             player.setY(player.getY() - 0.5f);
@@ -60,13 +73,18 @@ public class Player {
         // Y Movement-Collisions
         float vYtemp = vY/interations;
 
-        for (int i = 0; i < interations; i++) {
-            player.setY(player.getY() + vYtemp);
-            if (level.collidesWith(player)) {
-                player.setY(player.getY() - vYtemp);
-                vY = 0;
+        // if ((!level.collidesWithLadder(player) && vYtemp > 0) || vYtemp < 0) {
+
+            for (int i = 0; i < interations; i++) {
+                player.setY(player.getY() + vYtemp);
+
+                if (level.collidesWith(player) || level.collidesWithLadder(player)) {
+                    player.setY(player.getY() - vYtemp);
+                    vY = 0;
+                }
             }
-        }
+
+        // }
 
         // X acceleration
         if (gc.getInput().isKeyDown(Input.KEY_LEFT)) {

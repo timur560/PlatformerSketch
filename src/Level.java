@@ -16,6 +16,8 @@ import java.util.Map;
 public class Level {
     private List<Shape> platforms;
 
+    private List<Ladder> ladders;
+
     private float width = 2000;
     private float height = 900;
 
@@ -51,6 +53,7 @@ public class Level {
         width = ((Long) params.get("width")).floatValue();
         height = ((Long) params.get("height")).floatValue();
 
+        // platforms
         platforms = new ArrayList<Shape>();
 
         float[] floatArray;
@@ -64,6 +67,18 @@ public class Level {
             }
             platforms.add(new Polygon(floatArray));
         }
+
+        // ladders
+        ladders = new ArrayList<Ladder>();
+
+        for (List<Long> vertices : (List<List<Long>>) params.get("ladders")) {
+            floatArray = new float[vertices.size()];
+            i = 0;
+            for (Long vertex : vertices) {
+                floatArray[i++] = vertex.floatValue();
+            }
+            ladders.add(new Ladder(floatArray));
+        }
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -71,6 +86,12 @@ public class Level {
 
         for (Shape p : platforms) {
             g.draw(p);
+        }
+
+        g.setColor(Color.yellow);
+
+        for (Ladder l : ladders) {
+            g.draw(l.toShape());
         }
     }
 
@@ -81,6 +102,14 @@ public class Level {
     public boolean collidesWith (Shape s) {
         for (Shape p : platforms) {
             if (p.intersects(s)) return true;
+        }
+
+        return false;
+    }
+
+    public boolean collidesWithLadder(Shape s) {
+        for (Ladder l : ladders) {
+            if (l.toShape().intersects(s)) return true;
         }
 
         return false;

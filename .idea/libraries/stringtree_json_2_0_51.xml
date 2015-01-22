@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jsoup-1.8.1">
+  <library name="stringtree-json-2.0.51">
     <CLASSES>
-      <root url="jar://$USER_HOME$/java/jsoup-1.8.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../stringtree-json-2.0.5.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
