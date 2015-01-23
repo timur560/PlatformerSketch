@@ -114,7 +114,8 @@ public class Level {
                         floatArray[i++] = vertex.floatValue();
                     }
 
-                    enemies.add(new MovingEnemy(floatArray, (List<List<Long>>)movingEnemy.get("path")));
+                    enemies.add(new MovingEnemy(floatArray, (List<List<Long>>)movingEnemy.get("path"),
+                            (Double)movingEnemy.get("speed")));
                 }
             }
         }

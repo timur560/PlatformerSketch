@@ -10,11 +10,12 @@ public class MovingEnemy extends Enemy {
     private List<List<Long>> path;
     private int posIndex = 0;
 
-    float t = 0, speed = 0.5f;
+    private float t = 0, speed = 0.5f;
 
-    public MovingEnemy(float[] vertices, List<List<Long>> path) {
+    public MovingEnemy(float[] vertices, List<List<Long>> path, Double speed) {
         super(vertices);
         this.path = path;
+        this.speed = speed.floatValue();
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
