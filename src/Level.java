@@ -15,13 +15,19 @@ import java.util.Map;
 
 public class Level {
     private List<Shape> platforms;
-
     private List<Ladder> ladders;
+    private List<Enemy> enemies;
 
     private float width = 2000;
     private float height = 900;
 
+    private float[] entryPoint = new float[]{0.0f, 0.0f};
+
     private Map params = new HashMap();
+
+    public float[] getEntryPoint() {
+        return entryPoint;
+    }
 
     public void load(String jsonPath) {
 
@@ -47,17 +53,22 @@ public class Level {
     }
 
     public void init(GameContainer gc) throws SlickException {
+        float[] floatArray;
+        int i;
 
-        load("res/levels/1.json");
+        load("res/levels/2.json");
 
         width = ((Long) params.get("width")).floatValue();
         height = ((Long) params.get("height")).floatValue();
 
+        i = 0;
+        for (Long ep : (List<Long>) params.get("entryPoint")) {
+            entryPoint[i++] = ep.floatValue();
+        }
+
         // platforms
         platforms = new ArrayList<Shape>();
 
-        float[] floatArray;
-        int i;
 
         for (List<Long> vertices : (List<List<Long>>) params.get("shapes")) {
             floatArray = new float[vertices.size()];
@@ -79,6 +90,35 @@ public class Level {
             }
             ladders.add(new Ladder(floatArray));
         }
+
+        // enemies
+        enemies = new ArrayList<Enemy>();
+
+        for (String enemyType : ((Map<String,List>) params.get("enemies")).keySet()) {
+            if (enemyType.equals("static")) {
+                for (Map staticEnemy : ((Map<String,List<Map>>) params.get("enemies")).get(enemyType)) {
+                    List<Long> vertices = (List)staticEnemy.get("vertices");
+                    floatArray = new float[vertices.size()];
+                    i = 0;
+                    for (Long vertex : vertices) {
+                        floatArray[i++] = vertex.floatValue();
+                    }
+                    enemies.add(new StaticEnemy(floatArray));
+                }
+            } else if (enemyType.equals("moving")) {
+                for (Map movingEnemy : ((Map<String,List<Map>>) params.get("enemies")).get(enemyType)) {
+                    List<Long> vertices = (List)movingEnemy.get("vertices");
+                    floatArray = new float[vertices.size()];
+                    i = 0;
+                    for (Long vertex : vertices) {
+                        floatArray[i++] = vertex.floatValue();
+                    }
+
+                    enemies.add(new MovingEnemy(floatArray, (List<List<Long>>)movingEnemy.get("path")));
+                }
+            }
+        }
+
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -93,10 +133,18 @@ public class Level {
         for (Ladder l : ladders) {
             g.draw(l.toShape());
         }
+
+        g.setColor(Color.red);
+
+        for (Enemy e : enemies) {
+            g.draw(e.toShape());
+        }
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-
+        for (Enemy e : enemies) {
+            e.update(gc, delta);
+        }
     }
 
     public boolean collidesWith (Shape s) {
@@ -110,6 +158,14 @@ public class Level {
     public boolean collidesWithLadder(Shape s) {
         for (Ladder l : ladders) {
             if (l.toShape().intersects(s)) return true;
+        }
+
+        return false;
+    }
+
+    public boolean collidesWithEnemie(Shape s) {
+        for (Enemy e : enemies) {
+            if (e.toShape().intersects(s)) return true;
         }
 
         return false;

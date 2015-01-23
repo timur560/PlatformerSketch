@@ -15,6 +15,8 @@ public class Player {
     private Shape player;
     private Animation goLeft, goRight, stayLeft, stayRight, jumpRight, jumpLeft, current;
     private Level level;
+    private Weapon weapon;
+    private boolean isDead = false;
 
     private float vX = 0;
     private float vY = 0;
@@ -24,9 +26,10 @@ public class Player {
     }
 
     public void init(GameContainer gc) throws SlickException {
-        // SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/sprite.png").getFile()), 120, 130);
+        player = new Rectangle(level.getEntryPoint()[0], level.getEntryPoint()[1], 45, 45);
+
+//        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/sprite.png").getFile()), 120, 130);
 //        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/bt_sprite2.png").getFile()), 50, 50);
-        player = new Rectangle(100, 100, 45, 45); // 120, 130);
 //        int[] animationSpeed = new int[5];
 //        for (int i = 0; i <= 4; i++) animationSpeed[i] = 120;
 
@@ -37,17 +40,32 @@ public class Player {
 //        jumpLeft = new Animation(sheet, new int[]{0,1}, new int[]{200});
 //        jumpRight = new Animation(sheet, new int[]{0,3}, new int[]{200});
 
-        current = stayRight;
+//        current = stayRight;
+    }
+
+    public void setWeapon(Weapon w) {
+        weapon = w;
+    }
+
+    public void die() {
+        isDead = true;
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        g.setColor(Color.red);
-        // if (Platformer.DEBUG_MODE)
+        g.setColor(Color.blue);
+        // if (Platformer.DEBUG_MODE) {
             g.draw(player);
+        // }
         // current.draw(player.getX()-8, player.getY()-11);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
+        if (isDead) {
+            player.setX(level.getEntryPoint()[0]);
+            player.setY(level.getEntryPoint()[1]);
+            isDead = false;
+            return;
+        }
 
         // ladder collision
         if (gc.getInput().isKeyDown(Input.KEY_UP)) {
@@ -73,18 +91,14 @@ public class Player {
         // Y Movement-Collisions
         float vYtemp = vY/interations;
 
-        // if ((!level.collidesWithLadder(player) && vYtemp > 0) || vYtemp < 0) {
+        for (int i = 0; i < interations; i++) {
+            player.setY(player.getY() + vYtemp);
 
-            for (int i = 0; i < interations; i++) {
-                player.setY(player.getY() + vYtemp);
-
-                if (level.collidesWith(player) || level.collidesWithLadder(player)) {
-                    player.setY(player.getY() - vYtemp);
-                    vY = 0;
-                }
+            if (level.collidesWith(player) || (level.collidesWithLadder(player) && vYtemp > 0)) {
+                player.setY(player.getY() - vYtemp);
+                vY = 0;
             }
-
-        // }
+        }
 
         // X acceleration
         if (gc.getInput().isKeyDown(Input.KEY_LEFT)) {
@@ -124,24 +138,15 @@ public class Player {
             }
         }
 
-        // set level horizontal offset
-//        vXtemp = vX;
-//
-//        if (level.getOffsetLeft() > level.WIDTH - Platformer.WIDTH) {
-//            level.setOffsetLeft(level.WIDTH - Platformer.WIDTH);
-//        }
-//
-//        if (player.getX() > Platformer.WIDTH - 300 && level.getOffsetLeft() < level.WIDTH - Platformer.WIDTH) {
-//            player.setX(player.getX() - vXtemp);
-//            level.setOffsetLeft(level.getOffsetLeft() + vXtemp);
-//            vX = 0;
-//        } else if (player.getX() < 300 && level.getOffsetLeft() > 0) {
-//            player.setX(player.getX() - vXtemp);
-//            if (level.getOffsetLeft() + vXtemp >= 0) level.setOffsetLeft(level.getOffsetLeft() + vXtemp);
-//            if (level.getOffsetLeft() < Math.abs(vXtemp)) level.setOffsetLeft(0);
-//            vX = 0;
-//        }
+        // enemies collision
+        if (level.collidesWithEnemie(player)) {
+            die();
+        }
 
+        // die if dropped in gap
+        if (player.getY() > level.getHeight()) {
+            die();
+        }
     }
 
     public float getX() {
