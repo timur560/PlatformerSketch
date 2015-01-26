@@ -122,6 +122,20 @@ public class Level {
 
     }
 
+    public void update(GameContainer gc, int delta) throws SlickException {
+
+        int i = 0;
+        for (i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i).isDead()) {
+                enemies.remove(i);
+            }
+        }
+
+        for (Enemy e : enemies) {
+            e.update(gc, delta);
+        }
+    }
+
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.setColor(Color.green);
 
@@ -138,13 +152,7 @@ public class Level {
         g.setColor(Color.red);
 
         for (Enemy e : enemies) {
-            g.draw(e.toShape());
-        }
-    }
-
-    public void update(GameContainer gc, int delta) throws SlickException {
-        for (Enemy e : enemies) {
-            e.update(gc, delta);
+            e.render(gc, g);
         }
     }
 
@@ -166,7 +174,7 @@ public class Level {
 
     public boolean collidesWithEnemie(Shape s) {
         for (Enemy e : enemies) {
-            if (e.toShape().intersects(s)) return true;
+            if (e.getShape().intersects(s)) return true;
         }
 
         return false;
@@ -178,5 +186,9 @@ public class Level {
 
     public float getHeight() {
         return height;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 }

@@ -18,8 +18,9 @@ public class MovingEnemy extends Enemy {
         this.speed = speed.floatValue();
     }
 
+    @Override
     public void update(GameContainer gc, int delta) throws SlickException {
-        if (path.isEmpty()) return;
+        if (dead || path.isEmpty()) return;
 
         List<Long> currentPos, prevPos;
 
@@ -29,8 +30,8 @@ public class MovingEnemy extends Enemy {
 
         t += speed / delta;
 
-        shape.setX((1 - t) * prevPos.get(0) + t * currentPos.get(0));
-        shape.setY((1 - t) * prevPos.get(1) + t * currentPos.get(1));
+        s.setX((1 - t) * prevPos.get(0) + t * currentPos.get(0));
+        s.setY((1 - t) * prevPos.get(1) + t * currentPos.get(1));
 
         if (t > 1) {
             t = 0;

@@ -8,21 +8,32 @@ import org.newdawn.slick.geom.Shape;
  * Created by qwer on 23.01.15.
  */
 abstract class Enemy {
-    protected Shape shape;
+    protected Shape s;
+
+    protected boolean dead;
 
     public Enemy(float[] vertices) {
-        shape = new Polygon(vertices);
+        s = new Polygon(vertices);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        g.draw(shape);
+        if (!dead) g.draw(s);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
 
     }
 
-    public Shape toShape() {
-        return shape;
+    public void die() {
+        dead = true;
+        s = null;
+    }
+
+    public Shape getShape() {
+        return s;
+    }
+
+    public boolean isDead() {
+        return dead;
     }
 }

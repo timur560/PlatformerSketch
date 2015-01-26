@@ -3,20 +3,24 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 public class Player {
+    public static int UP = 1;
+    public static int RIGHT = 2;
+    public static int DOWN = 3;
+    public static int LEFT = 4;
 
     private float gravity = 0.7f;
     private float jumpStrength = -15;
     private float speed = 7;
     private static float currentSpeed = 0;
     private float inertion = 0.9f;
-
     private int interations = 5;
+    private int direction = RIGHT;
 
     private Shape player;
     private Animation goLeft, goRight, stayLeft, stayRight, jumpRight, jumpLeft, current;
     private Level level;
     private Weapon weapon;
-    private boolean isDead = false;
+    private boolean dead = false;
 
     private float vX = 0;
     private float vY = 0;
@@ -27,6 +31,8 @@ public class Player {
 
     public void init(GameContainer gc) throws SlickException {
         player = new Rectangle(level.getEntryPoint()[0], level.getEntryPoint()[1], 45, 45);
+
+        setWeapon(new Gun(this));
 
 //        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/sprite.png").getFile()), 120, 130);
 //        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/bt_sprite2.png").getFile()), 50, 50);
@@ -45,42 +51,37 @@ public class Player {
 
     public void setWeapon(Weapon w) {
         weapon = w;
+        w.init();
     }
 
     public void die() {
-        isDead = true;
-    }
-
-    public void render(GameContainer gc, Graphics g) throws SlickException {
-        g.setColor(Color.blue);
-        // if (Platformer.DEBUG_MODE) {
-            g.draw(player);
-        // }
-        // current.draw(player.getX()-8, player.getY()-11);
+        dead = true;
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-        if (isDead) {
+        if (dead) {
             player.setX(level.getEntryPoint()[0]);
             player.setY(level.getEntryPoint()[1]);
-            isDead = false;
+            dead = false;
             return;
         }
 
         // ladder collision
         if (gc.getInput().isKeyDown(Input.KEY_UP)) {
+            direction = UP;
             if (level.collidesWithLadder(player)) {
                 player.setY(player.getY() - speed);
             }
             if (level.collidesWith(player)) player.setY(player.getY() + speed);
         } else if (gc.getInput().isKeyDown(Input.KEY_DOWN)) {
+            direction = DOWN;
             player.setY(player.getY() + speed);
             if (level.collidesWith(player)) player.setY(player.getY() - speed);
         }
 
         // Y acceleration
         vY += gravity;
-        if (gc.getInput().isKeyDown(Input.KEY_TAB)) {
+        if (gc.getInput().isKeyDown(Input.KEY_Z)) {
             player.setY(player.getY() + 0.5f);
             if (level.collidesWith(player) || level.collidesWithLadder(player)) {
                 vY = jumpStrength;
@@ -102,11 +103,13 @@ public class Player {
 
         // X acceleration
         if (gc.getInput().isKeyDown(Input.KEY_LEFT)) {
+            direction = LEFT;
             current = (vY == 0) ? goLeft : jumpLeft;
             if (currentSpeed >= -speed) {
                 currentSpeed -= inertion;
             }
         } else if (gc.getInput().isKeyDown(Input.KEY_RIGHT)) {
+            direction = RIGHT;
             current = (vY == 0) ? goRight : jumpRight;
             if (currentSpeed <= speed) {
                 currentSpeed += inertion;
@@ -147,6 +150,23 @@ public class Player {
         if (player.getY() > level.getHeight()) {
             die();
         }
+
+        // shoot
+        if (gc.getInput().isKeyDown(Input.KEY_X)) {
+            weapon.act();
+        }
+
+        weapon.update(gc, delta);
+    }
+
+    public void render(GameContainer gc, Graphics g) throws SlickException {
+        g.setColor(Color.blue);
+        // if (Platformer.DEBUG_MODE)
+            g.draw(player);
+
+        // current.draw(player.getX()-8, player.getY()-11);
+
+        weapon.render(gc, g);
     }
 
     public float getX() {
@@ -155,5 +175,13 @@ public class Player {
 
     public float getY() {
         return player.getY();
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public int getDirection() {
+        return direction;
     }
 }
