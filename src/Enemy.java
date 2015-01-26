@@ -11,6 +11,7 @@ abstract class Enemy {
     protected Shape s;
 
     protected boolean dead;
+    protected boolean canDie;
 
     public Enemy(float[] vertices) {
         s = new Polygon(vertices);
@@ -25,6 +26,7 @@ abstract class Enemy {
     }
 
     public void die() {
+        if (!canDie) return;
         dead = true;
         s = null;
     }

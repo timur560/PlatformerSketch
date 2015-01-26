@@ -26,6 +26,14 @@ public class Gun extends Weapon implements Shootable {
 
     // shoot
     public void act() {
+        if (prevAct == 0) {
+            prevAct = System.currentTimeMillis();
+        } else if (prevAct + delay > System.currentTimeMillis()) {
+            return;
+        }
+
+        prevAct = System.currentTimeMillis();
+
         if (bullets.size() < maxBulletsCount) {
             float destX = player.getX(), destY = player.getY();
             if (player.getDirection() == Player.UP) {

@@ -13,7 +13,7 @@ public class Bullet {
     protected Shape s;
 
     protected float x1, y1, x2, y2;
-    protected float t = 0, speed = 0.3f;
+    protected float t = 0, speed = 0.6f;
     protected boolean dead = false;
     protected Weapon weapon;
 

@@ -12,10 +12,11 @@ public class MovingEnemy extends Enemy {
 
     private float t = 0, speed = 0.5f;
 
-    public MovingEnemy(float[] vertices, List<List<Long>> path, Double speed) {
+    public MovingEnemy(float[] vertices, List<List<Long>> path, Double speed, boolean canDie) {
         super(vertices);
         this.path = path;
         this.speed = speed.floatValue();
+        this.canDie = canDie;
     }
 
     @Override

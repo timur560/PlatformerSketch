@@ -5,5 +5,6 @@ public class StaticEnemy extends Enemy {
 
     public StaticEnemy(float[] vertices) {
         super(vertices);
+        canDie = false;
     }
 }

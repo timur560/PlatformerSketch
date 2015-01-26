@@ -115,7 +115,7 @@ public class Level {
                     }
 
                     enemies.add(new MovingEnemy(floatArray, (List<List<Long>>)movingEnemy.get("path"),
-                            (Double)movingEnemy.get("speed")));
+                            (Double)movingEnemy.get("speed"), true));
                 }
             }
         }

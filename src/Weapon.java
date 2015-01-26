@@ -9,16 +9,19 @@ import org.newdawn.slick.geom.Shape;
 abstract class Weapon {
     protected Shape s;
     protected Player player;
+    protected int delay = 200;
+    protected long prevAct = 0;
 
     public Weapon(Player p) {
         player = p;
     }
 
     abstract public void init();
-    abstract public void act();
+
+    public void act() {
+    }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
