@@ -1,13 +1,16 @@
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
-public class Game extends BasicGame
-{
+public class Game extends BasicGameState { // BasicGame
     protected Level level;
     protected Player player;
+
+    StateBasedGame game;
+
+    public static int ID = 1;
 
     public float[] getOffset() {
         float[] result = new float[]{0,0};
@@ -23,19 +26,32 @@ public class Game extends BasicGame
         return result;
     }
 
-    public Game() throws SlickException {
-        super("Platformer Sketch");
+    public Player getPlayer() {
+        return player;
     }
 
-    public void init(GameContainer gc) throws SlickException {
-        level = new Level(this);
-        level.init(gc);
+    public Level getLevel() {
+        return level;
+    }
 
+    @Override
+    public int getID() {
+        return 1;
+    }
+
+    @Override
+    public void init(GameContainer gc, StateBasedGame stateBasedGame) throws SlickException {
+        game = stateBasedGame;
+
+        level = new Level(this);
         player = new Player(this);
+
+        level.init(gc);
         player.init(gc);
     }
 
-    public void render(GameContainer gc, Graphics g) throws SlickException {
+    @Override
+    public void render(GameContainer gc, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         // calculate offset
         float[] offset = getOffset();
         g.translate(-offset[0], -offset[1]);
@@ -45,16 +61,17 @@ public class Game extends BasicGame
         player.render(gc, g);
     }
 
-    public void update(GameContainer gc, int delta) throws SlickException {
+    @Override
+    public void update(GameContainer gc, StateBasedGame stateBasedGame, int delta) throws SlickException {
         level.update(gc, delta);
         player.update(gc, delta);
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Level getLevel() {
-        return level;
+    public void keyReleased(int key, char c) {
+        switch (key) {
+            case Input.KEY_ESCAPE:
+                game.enterState(Menu.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                break;
+        }
     }
 }

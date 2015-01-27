@@ -15,6 +15,7 @@ public class Level {
     private List<Shape> platforms;
     private List<Ladder> ladders;
     private List<Enemy> enemies;
+    private List<Exit> exits;
 
     private float width = 2000;
     private float height = 900;
@@ -30,6 +31,7 @@ public class Level {
 
     public Level(Game g) {
         game = g;
+        load("res/levels/2.json");
     }
 
     public void load(String jsonPath) {
@@ -72,8 +74,6 @@ public class Level {
     public void init(GameContainer gc) throws SlickException {
         float[] floatArray;
         int i;
-
-        load("res/levels/2.json");
 
         width = ((Long) params.get("width")).floatValue();
         height = ((Long) params.get("height")).floatValue();
@@ -137,6 +137,14 @@ public class Level {
             }
         }
 
+        // exits
+        exits = new ArrayList<Exit>();
+
+        for (Map exit : ((List<Map>) params.get("exits"))) {
+            exits.add(new Exit(game, (List<Long>) exit.get("wall"), (List<Long>) exit.get("door"),
+                    new ActionTerminal((List<Long>) exit.get("terminal"))));
+        }
+
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
@@ -149,6 +157,10 @@ public class Level {
         }
 
         for (Enemy e : enemies) {
+            e.update(gc, delta);
+        }
+
+        for (Exit e : exits) {
             e.update(gc, delta);
         }
     }
@@ -187,6 +199,10 @@ public class Level {
         g.setColor(Color.red);
 
         for (Enemy e : enemies) {
+            e.render(gc, g);
+        }
+
+        for (Exit e : exits) {
             e.render(gc, g);
         }
     }

@@ -16,7 +16,7 @@ public class Player {
     private int interations = 5;
     private int direction = RIGHT;
 
-    private Shape player;
+    private Shape shape;
     private Animation moveLeft, moveRight, stayLeft, stayRight, jumpRight, jumpLeft, current, moveLadder, stayLadder;
     private Game game;
     private Weapon weapon;
@@ -30,7 +30,7 @@ public class Player {
     }
 
     public void init(GameContainer gc) throws SlickException {
-        player = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 45, 45);
+        shape = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 45, 45);
 
         setWeapon(new Gun(this));
 
@@ -63,8 +63,8 @@ public class Player {
         Level level = game.getLevel();
 
         if (dead) {
-            player.setX(level.getEntryPoint()[0]);
-            player.setY(level.getEntryPoint()[1]);
+            shape.setX(level.getEntryPoint()[0]);
+            shape.setY(level.getEntryPoint()[1]);
             dead = false;
             return;
         }
@@ -73,49 +73,49 @@ public class Player {
         if (gc.getInput().isKeyDown(Input.KEY_UP)) {
             direction = UP;
             current = moveLadder;
-            if (level.collidesWithLadder(player)) {
-                player.setY(player.getY() - speed);
+            if (level.collidesWithLadder(shape)) {
+                shape.setY(shape.getY() - speed);
             } else {
                 current = stayRight;
             }
-            if (level.collidesWith(player)) {
-                player.setY(player.getY() + speed);
+            if (level.collidesWith(shape)) {
+                shape.setY(shape.getY() + speed);
             }
         } else if (gc.getInput().isKeyDown(Input.KEY_DOWN)) {
             direction = DOWN;
-            player.setY(player.getY() + speed);
+            shape.setY(shape.getY() + speed);
             current = moveLadder;
-            if (level.collidesWith(player)) {
-                player.setY(player.getY() - speed);
+            if (level.collidesWith(shape)) {
+                shape.setY(shape.getY() - speed);
                 current = stayRight;
             }
-        } else if (level.collidesWithLadder(player)) {
+        } else if (level.collidesWithLadder(shape)) {
             current = stayLadder;
         }
 
         // Y acceleration
         vY += gravity;
         if (gc.getInput().isKeyDown(Input.KEY_Z)) { // jump
-            player.setY(player.getY() + 0.5f);
-            if (level.collidesWith(player) || level.collidesWithLadder(player)) {
+            shape.setY(shape.getY() + 0.5f);
+            if (level.collidesWith(shape) || level.collidesWithLadder(shape)) {
                 vY = jumpStrength;
             }
 
-            if (level.collidesWithLadder(player)) {
+            if (level.collidesWithLadder(shape)) {
                 current = stayLadder;
             }
 
-            player.setY(player.getY() - 0.5f);
+            shape.setY(shape.getY() - 0.5f);
         }
 
         // Y Movement-Collisions
         float vYtemp = vY/interations;
 
         for (int i = 0; i < interations; i++) {
-            player.setY(player.getY() + vYtemp);
+            shape.setY(shape.getY() + vYtemp);
 
-            if (level.collidesWith(player) || (level.collidesWithLadder(player) && vYtemp > 0)) {
-                player.setY(player.getY() - vYtemp);
+            if (level.collidesWith(shape) || (level.collidesWithLadder(shape) && vYtemp > 0)) {
+                shape.setY(shape.getY() - vYtemp);
                 vY = 0;
             }
         }
@@ -153,20 +153,20 @@ public class Player {
         // X Movement-Collisions
         float vXtemp = vX/interations;
         for (int i = 0; i < interations; i++) {
-            player.setX( player.getX() + vXtemp );
-            if (level.collidesWith(player)) {
-                player.setX( player.getX() - vXtemp );
+            shape.setX( shape.getX() + vXtemp );
+            if (level.collidesWith(shape)) {
+                shape.setX( shape.getX() - vXtemp );
                 vX = 0;
             }
         }
 
         // enemies collision
-        if (level.collidesWithEnemie(player)) {
+        if (level.collidesWithEnemie(shape)) {
             die();
         }
 
         // die if dropped in gap
-        if (player.getY() > level.getHeight()) {
+        if (shape.getY() > level.getHeight()) {
             die();
         }
 
@@ -180,18 +180,18 @@ public class Player {
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.setColor(Color.blue);
-        if (Platformer.DEBUG_MODE) g.draw(player);
-        g.drawAnimation(current, player.getX(), player.getY());
+        if (Platformer.DEBUG_MODE) g.draw(shape);
+        g.drawAnimation(current, shape.getX(), shape.getY());
 
         weapon.render(gc, g);
     }
 
     public float getX() {
-        return player.getX();
+        return shape.getX();
     }
 
     public float getY() {
-        return player.getY();
+        return shape.getY();
     }
 
     public Level getLevel() {
@@ -200,5 +200,9 @@ public class Player {
 
     public int getDirection() {
         return direction;
+    }
+
+    public Shape getShape() {
+        return shape;
     }
 }

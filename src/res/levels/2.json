@@ -5,7 +5,14 @@
   "entryPoint": [
     150,450
   ],
-  "exitZone": [],
+  "exits": [
+    {
+      "wall" : [300, 900, 1050],
+      "door" : [350, 950],
+      "terminal" : [500, 1000],
+      "to" : "1.1"
+    }
+  ],
   "coins": [],
   "ladders": [
     [
