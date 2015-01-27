@@ -6,36 +6,39 @@ import org.newdawn.slick.SlickException;
 
 public class Game extends BasicGame
 {
-    private Level level;
-    private Player player;
+    protected Level level;
+    protected Player player;
+
+    public float[] getOffset() {
+        float[] result = new float[]{0,0};
+
+        if (player.getX() - 300 > level.getWidth() - Platformer.WIDTH) result[0] = level.getWidth() - Platformer.WIDTH;
+        else if (player.getX() < 300) result[0] = 0;
+        else result[0] = player.getX() - 300;
+
+        if (player.getY() - 300> level.getHeight() - Platformer.HEIGHT) result[1] = level.getHeight() - Platformer.HEIGHT;
+        else if (player.getY() < 300) result[1] = 0;
+        else result[1] = player.getY() - 300;
+
+        return result;
+    }
 
     public Game() throws SlickException {
         super("Platformer Sketch");
     }
 
     public void init(GameContainer gc) throws SlickException {
-        level = new Level();
+        level = new Level(this);
         level.init(gc);
 
-        player = new Player(level);
+        player = new Player(this);
         player.init(gc);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if (Platformer.DEBUG_MODE) drawDebugLines(g, 50);
-
         // calculate offset
-        float xOffset = 0, yOffset = 0;
-
-        if (player.getX() - 300 > level.getWidth() - Platformer.WIDTH) xOffset = level.getWidth() - Platformer.WIDTH;
-        else if (player.getX() < 300) xOffset = 0;
-        else xOffset = player.getX() - 300;
-
-        if (player.getY() - 300> level.getHeight() - Platformer.HEIGHT) yOffset = level.getHeight() - Platformer.HEIGHT;
-        else if (player.getY() < 300) yOffset = 0;
-        else yOffset = player.getY() - 300;
-
-        g.translate(-xOffset, -yOffset);
+        float[] offset = getOffset();
+        g.translate(-offset[0], -offset[1]);
 
         // render
         level.render(gc, g);
@@ -47,15 +50,11 @@ public class Game extends BasicGame
         player.update(gc, delta);
     }
 
-    // Draw a grid on the screen for easy positioning
-    public void drawDebugLines(Graphics g, int size) {
-        int resolution = 800;
-        g.setColor(Color.darkGray);
-        for( int i = 0; i < resolution; i += size)
-        {
-            g.drawLine(i, 0, i, resolution);
-            g.drawLine(0,i, resolution, i);
-        }
+    public Player getPlayer() {
+        return player;
     }
 
+    public Level getLevel() {
+        return level;
+    }
 }

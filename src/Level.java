@@ -1,9 +1,7 @@
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.*;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 import org.stringtree.json.JSONReader;
 
 import java.nio.file.Files;
@@ -25,8 +23,13 @@ public class Level {
 
     private Map params = new HashMap();
 
-    public float[] getEntryPoint() {
-        return entryPoint;
+    private Image bg; // tmp
+    private SpriteSheet staticSprite;
+
+    protected Game game;
+
+    public Level(Game g) {
+        game = g;
     }
 
     public void load(String jsonPath) {
@@ -49,6 +52,20 @@ public class Level {
         }
 
         params = (Map) result;
+
+        // tmp
+        try {
+            bg = new Image(this.getClass().getResource("res/images/bg.png").getFile());
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
+
+        // static objects (ladder, ...) sprite sheet
+        try {
+            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("res/images/static.png").getFile()), 50,50);
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -85,7 +102,7 @@ public class Level {
         for (List<Long> vertices : (List<List<Long>>) params.get("ladders")) {
             floatArray = new float[vertices.size()];
             i = 0;
-            for (Long vertex : vertices) {
+            for (Long vertex : vertices ) {
                 floatArray[i++] = vertex.floatValue();
             }
             ladders.add(new Ladder(floatArray));
@@ -137,6 +154,19 @@ public class Level {
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
+
+        float[] offset = game.getOffset();
+
+        // max offset = width - Platformer.WIDTH
+        // width - Platformer.WIDTH / offet[0] = (width - bg.getWidth()) / bgx
+
+        float bgX = offset[0] * ((width - bg.getWidth())) / (width - Platformer.WIDTH);
+        float bgY = offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
+
+        g.drawImage(bg, bgX, bgY);
+
+        if (Platformer.DEBUG_MODE) drawDebugLines(g, 50);
+
         g.setColor(Color.green);
 
         for (Shape p : platforms) {
@@ -145,8 +175,13 @@ public class Level {
 
         g.setColor(Color.yellow);
 
-        for (Ladder l : ladders) {
-            g.draw(l.toShape());
+        for (final Ladder l : ladders) {
+            if (Platformer.DEBUG_MODE) g.draw(l.toShape());
+
+            int i;
+            for (i = 0; i <= l.toShape().getHeight(); i += 50) {
+                g.drawImage(staticSprite.getSubImage(0,0), l.toShape().getX() - 10, l.toShape().getY() + i);
+            }
         }
 
         g.setColor(Color.red);
@@ -191,4 +226,18 @@ public class Level {
     public List<Enemy> getEnemies() {
         return enemies;
     }
+
+    public float[] getEntryPoint() {
+        return entryPoint;
+    }
+
+    // Draw a grid on the screen for easy positioning
+    public void drawDebugLines(Graphics g, int size) {
+        g.setColor(Color.darkGray);
+        for (int i = 0; i < width; i += size) {
+            g.drawLine(i, 0, i, width);
+            g.drawLine(0,i, width, i);
+        }
+    }
+
 }

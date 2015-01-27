@@ -10,43 +10,44 @@ public class Player {
 
     private float gravity = 0.7f;
     private float jumpStrength = -15;
-    private float speed = 7;
+    private float speed = 3;
     private static float currentSpeed = 0;
     private float inertion = 0.9f;
     private int interations = 5;
     private int direction = RIGHT;
 
     private Shape player;
-    private Animation goLeft, goRight, stayLeft, stayRight, jumpRight, jumpLeft, current;
-    private Level level;
+    private Animation moveLeft, moveRight, stayLeft, stayRight, jumpRight, jumpLeft, current, moveLadder, stayLadder;
+    private Game game;
     private Weapon weapon;
     private boolean dead = false;
 
     private float vX = 0;
     private float vY = 0;
 
-    public Player(Level level) {
-        this.level = level;
+    public Player(Game g) {
+        game = g;
     }
 
     public void init(GameContainer gc) throws SlickException {
-        player = new Rectangle(level.getEntryPoint()[0], level.getEntryPoint()[1], 45, 45);
+        player = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 45, 45);
 
         setWeapon(new Gun(this));
 
-//        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/sprite.png").getFile()), 120, 130);
-//        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/bt_sprite2.png").getFile()), 50, 50);
-//        int[] animationSpeed = new int[5];
-//        for (int i = 0; i <= 4; i++) animationSpeed[i] = 120;
+        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/player_sprite.png").getFile()), 45, 45);
+        int[] animationSpeed = new int[4];
+        for (int i = 0; i <= 3; i++) animationSpeed[i] = 100;
 
-//        goLeft = new Animation(sheet, new int[]{0,5,1,5,2,5,3,5,4,5,5,5,6,5,7,5,8,5,9,5}, animationSpeed);
-//        goRight = new Animation(sheet, new int[]{0,7,1,7,2,7,3,7,4,7,5,7,6,7,7,7,8,7,9,7}, animationSpeed);
-//        stayLeft = new Animation(sheet, new int[]{0,5}, new int[]{200});
-//        stayRight = new Animation(sheet, new int[]{9,7}, new int[]{200});
-//        jumpLeft = new Animation(sheet, new int[]{0,1}, new int[]{200});
-//        jumpRight = new Animation(sheet, new int[]{0,3}, new int[]{200});
+        moveLeft = new Animation(sheet, new int[]{0,1,1,1,0,1,2,1}, animationSpeed);
+        moveRight = new Animation(sheet, new int[]{0,0,1,0,0,0,2,0}, animationSpeed);
+        stayLeft = new Animation(sheet, new int[]{0,1}, new int[]{200});
+        stayRight = new Animation(sheet, new int[]{0,0}, new int[]{200});
+        jumpLeft = new Animation(sheet, new int[]{1,1}, new int[]{200});
+        jumpRight = new Animation(sheet, new int[]{1,0}, new int[]{200});
+        moveLadder = new Animation(sheet, new int[]{0,2,2,2,1,2,2,2}, animationSpeed);
+        stayLadder = new Animation(sheet, new int[]{2,2}, new int[]{200});
 
-//        current = stayRight;
+        current = stayRight;
     }
 
     public void setWeapon(Weapon w) {
@@ -59,6 +60,8 @@ public class Player {
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
+        Level level = game.getLevel();
+
         if (dead) {
             player.setX(level.getEntryPoint()[0]);
             player.setY(level.getEntryPoint()[1]);
@@ -69,23 +72,39 @@ public class Player {
         // ladder collision
         if (gc.getInput().isKeyDown(Input.KEY_UP)) {
             direction = UP;
+            current = moveLadder;
             if (level.collidesWithLadder(player)) {
                 player.setY(player.getY() - speed);
+            } else {
+                current = stayRight;
             }
-            if (level.collidesWith(player)) player.setY(player.getY() + speed);
+            if (level.collidesWith(player)) {
+                player.setY(player.getY() + speed);
+            }
         } else if (gc.getInput().isKeyDown(Input.KEY_DOWN)) {
             direction = DOWN;
             player.setY(player.getY() + speed);
-            if (level.collidesWith(player)) player.setY(player.getY() - speed);
+            current = moveLadder;
+            if (level.collidesWith(player)) {
+                player.setY(player.getY() - speed);
+                current = stayRight;
+            }
+        } else if (level.collidesWithLadder(player)) {
+            current = stayLadder;
         }
 
         // Y acceleration
         vY += gravity;
-        if (gc.getInput().isKeyDown(Input.KEY_Z)) {
+        if (gc.getInput().isKeyDown(Input.KEY_Z)) { // jump
             player.setY(player.getY() + 0.5f);
             if (level.collidesWith(player) || level.collidesWithLadder(player)) {
                 vY = jumpStrength;
             }
+
+            if (level.collidesWithLadder(player)) {
+                current = stayLadder;
+            }
+
             player.setY(player.getY() - 0.5f);
         }
 
@@ -104,13 +123,13 @@ public class Player {
         // X acceleration
         if (gc.getInput().isKeyDown(Input.KEY_LEFT)) {
             direction = LEFT;
-            current = (vY == 0) ? goLeft : jumpLeft;
+            current = (vY == 0) ? moveLeft : jumpLeft;
             if (currentSpeed >= -speed) {
                 currentSpeed -= inertion;
             }
         } else if (gc.getInput().isKeyDown(Input.KEY_RIGHT)) {
             direction = RIGHT;
-            current = (vY == 0) ? goRight : jumpRight;
+            current = (vY == 0) ? moveRight : jumpRight;
             if (currentSpeed <= speed) {
                 currentSpeed += inertion;
             }
@@ -161,10 +180,8 @@ public class Player {
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.setColor(Color.blue);
-        // if (Platformer.DEBUG_MODE)
-            g.draw(player);
-
-        // current.draw(player.getX()-8, player.getY()-11);
+        if (Platformer.DEBUG_MODE) g.draw(player);
+        g.drawAnimation(current, player.getX(), player.getY());
 
         weapon.render(gc, g);
     }
@@ -178,7 +195,7 @@ public class Player {
     }
 
     public Level getLevel() {
-        return level;
+        return game.getLevel();
     }
 
     public int getDirection() {

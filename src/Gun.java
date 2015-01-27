@@ -46,7 +46,7 @@ public class Gun extends Weapon implements Shootable {
                 destX -= 500;
             }
 
-            bullets.add(new Bullet(this, player.getX(), player.getY(), destX, destY));
+            bullets.add(new Bullet(this, player.getX() + 20, player.getY() + 20, destX + 20, destY + 20));
         }
     }
 

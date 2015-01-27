@@ -1,5 +1,4 @@
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 import java.util.List;
 
@@ -12,11 +11,20 @@ public class MovingEnemy extends Enemy {
 
     private float t = 0, speed = 0.5f;
 
+    private SpriteSheet staticSprite;
+
     public MovingEnemy(float[] vertices, List<List<Long>> path, Double speed, boolean canDie) {
         super(vertices);
         this.path = path;
         this.speed = speed.floatValue();
         this.canDie = canDie;
+
+        try {
+            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("res/images/static.png").getFile()), 50,50);
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -42,6 +50,14 @@ public class MovingEnemy extends Enemy {
                 posIndex++;
             }
         }
+    }
+
+    public void render(GameContainer gc, Graphics g) throws SlickException {
+        if (dead) return;
+
+        //g.draw(s);
+
+        g.drawImage(staticSprite.getSubImage(0,1), s.getX(), s.getY());
     }
 
 }
