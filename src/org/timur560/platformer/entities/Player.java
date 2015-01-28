@@ -1,40 +1,49 @@
+package org.timur560.platformer.entities;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.util.ResourceLoader;
 
-public class Player {
-    public static int UP = 1;
+import org.timur560.platformer.Platformer;
+import org.timur560.platformer.core.GameObject;
+import org.timur560.platformer.entities.weapon.Gun;
+import org.timur560.platformer.entities.weapon.Weapon;
+import org.timur560.platformer.world.Level;
+import org.timur560.platformer.main.Game;
+
+import java.net.URISyntaxException;
+
+public class Player extends GameObject {
+    public static int UP    = 1;
     public static int RIGHT = 2;
-    public static int DOWN = 3;
-    public static int LEFT = 4;
+    public static int DOWN  = 3;
+    public static int LEFT  = 4;
 
-    private float gravity = 0.7f;
-    private float jumpStrength = -15;
-    private float speed = 3;
-    private static float currentSpeed = 0;
-    private float inertion = 0.9f;
-    private int interations = 5;
-    private int direction = RIGHT;
+    private float gravity       = 0.7f;
+    private float jumpStrength  = -12;
+    private float speed         = 3;
+    private float currentSpeed  = 0;
+    private float inertion      = 0.9f;
+    private float vX            = 0;
+    private float vY            = 0;
+    private int interations     = 5;
+    private int direction       = RIGHT;
+    private int jumpDelay       = 500;
+    private long prevJumpTime   = 0;
+    private boolean dead        = false;
 
-    private Shape shape;
-    private Animation moveLeft, moveRight, stayLeft, stayRight, jumpRight, jumpLeft, current, moveLadder, stayLadder;
-    private Game game;
+    private Animation moveLeft, moveRight, stayLeft, stayRight, jumpRight, jumpLeft, moveLadder, stayLadder, current;
     private Weapon weapon;
-    private boolean dead = false;
 
-    private float vX = 0;
-    private float vY = 0;
-
-    public Player(Game g) {
-        game = g;
+    public Player(Game g) throws SlickException {
+        super(g);
+        shape = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 45, 45);
+        setWeapon(new Gun(game, this));
     }
 
-    public void init(GameContainer gc) throws SlickException {
-        shape = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 45, 45);
-
-        setWeapon(new Gun(this));
-
-        SpriteSheet sheet = new SpriteSheet(new Image(this.getClass().getResource("res/images/player_sprite.png").getFile()), 45, 45);
+    public void init() throws SlickException {
+        SpriteSheet sheet;
+        sheet = new SpriteSheet(new Image(ResourceLoader.getResource("res/images/player_sprite.png").getFile()), 45, 45);
         int[] animationSpeed = new int[4];
         for (int i = 0; i <= 3; i++) animationSpeed[i] = 100;
 
@@ -50,7 +59,7 @@ public class Player {
         current = stayRight;
     }
 
-    public void setWeapon(Weapon w) {
+    public void setWeapon(Weapon w) throws SlickException {
         weapon = w;
         w.init();
     }
@@ -97,8 +106,9 @@ public class Player {
         vY += gravity;
         if (gc.getInput().isKeyDown(Input.KEY_Z)) { // jump
             shape.setY(shape.getY() + 0.5f);
-            if (level.collidesWith(shape) || level.collidesWithLadder(shape)) {
+            if ((level.collidesWith(shape) || level.collidesWithLadder(shape)) && System.currentTimeMillis() > jumpDelay + prevJumpTime) {
                 vY = jumpStrength;
+                prevJumpTime = System.currentTimeMillis();
             }
 
             if (level.collidesWithLadder(shape)) {
@@ -202,7 +212,4 @@ public class Player {
         return direction;
     }
 
-    public Shape getShape() {
-        return shape;
-    }
 }

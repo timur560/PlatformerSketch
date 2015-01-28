@@ -1,8 +1,8 @@
+package org.timur560.platformer.entities.weapon;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
-
-import java.util.List;
 
 /**
  * Created by timur on 25.01.15.
@@ -26,7 +26,7 @@ public class Bullet {
         s = new Rectangle(x1, y1, 20, 20);
 
         try {
-            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("res/images/static.png").getFile()), 50,50);
+            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("/res/images/static.png").getFile()), 50,50);
         } catch (SlickException e) {
             e.printStackTrace();
         }

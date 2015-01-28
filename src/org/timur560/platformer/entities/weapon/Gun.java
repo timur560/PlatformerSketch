@@ -1,7 +1,13 @@
+package org.timur560.platformer.entities.weapon;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.timur560.platformer.Platformer;
+import org.timur560.platformer.entities.Player;
+import org.timur560.platformer.entities.enemies.*;
+import org.timur560.platformer.main.Game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +20,9 @@ public class Gun extends Weapon implements Shootable {
 
     protected int maxBulletsCount = 100;
 
-    public Gun(Player p) {
-        super(p);
-        s = new Rectangle(p.getX() + 20, p.getY() - 20, 30, 15);
+    public Gun(Game g, Player p) {
+        super(g, p);
+        shape = new Rectangle(p.getX() + 20, p.getY() - 20, 30, 15);
         bullets = new ArrayList<Bullet>();
     }
 
@@ -79,12 +85,13 @@ public class Gun extends Weapon implements Shootable {
         }
 
         //
-        s.setX(player.getX() + 20);
-        s.setY(player.getY() - 20);
+        shape.setX(player.getX() + 20);
+        shape.setY(player.getY() + 20);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        super.render(gc, g);
+        if (Platformer.DEBUG_MODE) g.draw(shape);
+
         for (Bullet b : bullets) {
             b.render(gc, g);
         }

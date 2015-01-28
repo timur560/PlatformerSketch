@@ -1,8 +1,11 @@
+package org.timur560.platformer.main;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.timur560.platformer.Platformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,7 @@ public class Menu extends BasicGameState {
             case Input.KEY_ENTER:
                 switch (currentItemId) {
                     case 0:
-                        game.enterState(Game.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                        game.enterState(org.timur560.platformer.main.Game.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
                         break;
                     case 1:
                         System.exit(0);

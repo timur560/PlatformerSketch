@@ -1,7 +1,7 @@
+package org.timur560.platformer.world;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 import org.stringtree.json.JSONReader;
 
 import java.nio.file.Files;
@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.timur560.platformer.Platformer;
+import org.timur560.platformer.entities.*;
+import org.timur560.platformer.entities.enemies.*;
+import org.timur560.platformer.main.Game;
 
 public class Level {
     private List<Shape> platforms;
@@ -29,49 +34,10 @@ public class Level {
 
     protected Game game;
 
-    public Level(Game g) {
+    public Level(org.timur560.platformer.main.Game g) {
         game = g;
-        load("res/levels/2.json");
-    }
+        load("2");
 
-    public void load(String jsonPath) {
-
-        if (this.getClass().getResource(jsonPath) == null) {
-            System.out.println("No such resource file : " + jsonPath);
-            System.exit(0);
-        }
-
-        JSONReader jsonReader = new JSONReader();
-
-        Object result = null;
-
-        try {
-            String jsonString = String.join("",
-                    Files.readAllLines(Paths.get(this.getClass().getResource(jsonPath).toURI())));
-            result = jsonReader.read(jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        params = (Map) result;
-
-        // tmp
-        try {
-            bg = new Image(this.getClass().getResource("res/images/bg.png").getFile());
-        } catch (SlickException e) {
-            e.printStackTrace();
-        }
-
-        // static objects (ladder, ...) sprite sheet
-        try {
-            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("res/images/static.png").getFile()), 50,50);
-        } catch (SlickException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void init(GameContainer gc) throws SlickException {
         float[] floatArray;
         int i;
 
@@ -120,7 +86,7 @@ public class Level {
                     for (Long vertex : vertices) {
                         floatArray[i++] = vertex.floatValue();
                     }
-                    enemies.add(new StaticEnemy(floatArray));
+                    enemies.add(new StaticEnemy(game, floatArray));
                 }
             } else if (enemyType.equals("moving")) {
                 for (Map movingEnemy : ((Map<String,List<Map>>) params.get("enemies")).get(enemyType)) {
@@ -131,7 +97,7 @@ public class Level {
                         floatArray[i++] = vertex.floatValue();
                     }
 
-                    enemies.add(new MovingEnemy(floatArray, (List<List<Long>>)movingEnemy.get("path"),
+                    enemies.add(new MovingEnemy(game, floatArray, (List<List<Long>>)movingEnemy.get("path"),
                             (Double)movingEnemy.get("speed"), true));
                 }
             }
@@ -142,9 +108,57 @@ public class Level {
 
         for (Map exit : ((List<Map>) params.get("exits"))) {
             exits.add(new Exit(game, (List<Long>) exit.get("wall"), (List<Long>) exit.get("door"),
-                    new ActionTerminal((List<Long>) exit.get("terminal"))));
+                    new ActionTerminal(game, (List<Long>) exit.get("terminal"))));
         }
 
+    }
+
+    public void load(String level) {
+
+        if (this.getClass().getResource("/res/levels/" + level + ".json") == null) {
+            System.out.println("No resources for level " + level);
+            System.exit(0);
+        }
+
+        JSONReader jsonReader = new JSONReader();
+
+        Object result = null;
+
+        try {
+            String jsonString = String.join("",
+                    Files.readAllLines(Paths.get(this.getClass().getResource("/res/levels/" + level + ".json").toURI())));
+            result = jsonReader.read(jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        params = (Map) result;
+
+        // tmp
+        try {
+            bg = new Image(this.getClass().getResource("/res/images/bg.png").getFile());
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
+
+        // tmp
+        // static objects (ladder, ...) sprite sheet
+        try {
+            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("/res/images/static.png").getFile()), 50,50);
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void init() throws SlickException {
+        for (Enemy e : enemies) {
+            e.init();
+        }
+
+        for (Exit e : exits) {
+            e.init();
+        }
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
@@ -212,6 +226,10 @@ public class Level {
             if (p.intersects(s)) return true;
         }
 
+        for (Exit e : exits) {
+            if (e.intersects(s)) return true;
+        }
+
         return false;
     }
 
@@ -241,6 +259,10 @@ public class Level {
 
     public List<Enemy> getEnemies() {
         return enemies;
+    }
+
+    public List<Exit> getExits() {
+        return exits;
     }
 
     public float[] getEntryPoint() {

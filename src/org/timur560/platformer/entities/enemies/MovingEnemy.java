@@ -1,4 +1,8 @@
+package org.timur560.platformer.entities.enemies;
+
 import org.newdawn.slick.*;
+import org.timur560.platformer.Platformer;
+import org.timur560.platformer.main.Game;
 
 import java.util.List;
 
@@ -13,18 +17,20 @@ public class MovingEnemy extends Enemy {
 
     private SpriteSheet staticSprite;
 
-    public MovingEnemy(float[] vertices, List<List<Long>> path, Double speed, boolean canDie) {
-        super(vertices);
+    public MovingEnemy(Game g, float[] vertices, List<List<Long>> path, Double speed, boolean canDie) {
+        super(g, vertices);
         this.path = path;
         this.speed = speed.floatValue();
         this.canDie = canDie;
+    }
 
+    @Override
+    public void init() throws SlickException {
         try {
-            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("res/images/static.png").getFile()), 50,50);
+            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("/res/images/static.png").getFile()), 50,50);
         } catch (SlickException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -39,8 +45,8 @@ public class MovingEnemy extends Enemy {
 
         t += speed / delta;
 
-        s.setX((1 - t) * prevPos.get(0) + t * currentPos.get(0));
-        s.setY((1 - t) * prevPos.get(1) + t * currentPos.get(1));
+        shape.setX((1 - t) * prevPos.get(0) + t * currentPos.get(0));
+        shape.setY((1 - t) * prevPos.get(1) + t * currentPos.get(1));
 
         if (t > 1) {
             t = 0;
@@ -55,9 +61,9 @@ public class MovingEnemy extends Enemy {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (dead) return;
 
-        //g.draw(s);
+        if (Platformer.DEBUG_MODE) g.draw(shape);
 
-        g.drawImage(staticSprite.getSubImage(0,1), s.getX(), s.getY());
+        g.drawImage(staticSprite.getSubImage(0,1), shape.getX(), shape.getY());
     }
 
 }

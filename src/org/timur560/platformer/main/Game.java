@@ -1,8 +1,13 @@
+package org.timur560.platformer.main;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.timur560.platformer.Platformer;
+import org.timur560.platformer.entities.Player;
+import org.timur560.platformer.world.Level;
 
 public class Game extends BasicGameState { // BasicGame
     protected Level level;
@@ -15,13 +20,16 @@ public class Game extends BasicGameState { // BasicGame
     public float[] getOffset() {
         float[] result = new float[]{0,0};
 
-        if (player.getX() - 300 > level.getWidth() - Platformer.WIDTH) result[0] = level.getWidth() - Platformer.WIDTH;
-        else if (player.getX() < 300) result[0] = 0;
-        else result[0] = player.getX() - 300;
+        if (player.getX() - 300 / Platformer.ZOOM > level.getWidth() - Platformer.WIDTH / Platformer.ZOOM) result[0] = level.getWidth() - Platformer.WIDTH / Platformer.ZOOM;
+        else if (player.getX() < 300 / Platformer.ZOOM) result[0] = 0;
+        else result[0] = player.getX() - 300 / Platformer.ZOOM;
 
-        if (player.getY() - 300> level.getHeight() - Platformer.HEIGHT) result[1] = level.getHeight() - Platformer.HEIGHT;
-        else if (player.getY() < 300) result[1] = 0;
-        else result[1] = player.getY() - 300;
+        if (player.getY() - 300 / Platformer.ZOOM > level.getHeight() - Platformer.HEIGHT / Platformer.ZOOM) result[1] = level.getHeight() - Platformer.HEIGHT / Platformer.ZOOM;
+        else if (player.getY() < 300 / Platformer.ZOOM) result[1] = 0;
+        else result[1] = player.getY() - 300 / Platformer.ZOOM;
+
+        result[0] *= Platformer.ZOOM;
+        result[1] *= Platformer.ZOOM;
 
         return result;
     }
@@ -46,15 +54,19 @@ public class Game extends BasicGameState { // BasicGame
         level = new Level(this);
         player = new Player(this);
 
-        level.init(gc);
-        player.init(gc);
+        level.init();
+        player.init();
     }
 
     @Override
     public void render(GameContainer gc, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         // calculate offset
         float[] offset = getOffset();
+
         g.translate(-offset[0], -offset[1]);
+
+        g.setAntiAlias(false);
+        g.scale(Platformer.ZOOM, Platformer.ZOOM);
 
         // render
         level.render(gc, g);
