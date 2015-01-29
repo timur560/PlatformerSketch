@@ -17,7 +17,7 @@ public class MovingEnemy extends Enemy {
 
     private SpriteSheet staticSprite;
 
-    public MovingEnemy(Game g, float[] vertices, List<List<Long>> path, Double speed, boolean canDie) {
+    public MovingEnemy(Game g, List<Long> vertices, List<List<Long>> path, Double speed, boolean canDie) {
         super(g, vertices);
         this.path = path;
         this.speed = speed.floatValue();
@@ -35,6 +35,7 @@ public class MovingEnemy extends Enemy {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
+        super.update(gc, delta);
         if (dead || path.isEmpty()) return;
 
         List<Long> currentPos, prevPos;
@@ -61,6 +62,7 @@ public class MovingEnemy extends Enemy {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (dead) return;
 
+        g.setColor(Color.red);
         if (Platformer.DEBUG_MODE) g.draw(shape);
 
         g.drawImage(staticSprite.getSubImage(0,1), shape.getX(), shape.getY());

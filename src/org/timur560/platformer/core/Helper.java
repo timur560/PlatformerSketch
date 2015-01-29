@@ -1,6 +1,14 @@
 package org.timur560.platformer.core;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
+import org.timur560.platformer.Platformer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by timur on 28.01.15.
@@ -29,5 +37,37 @@ public class Helper {
         };
 
         return new Polygon(floatArray);
+    }
+
+    public static List<float[]> drops;
+    public static void renderSnow(Graphics g, float[] offset) {
+        if (drops == null) { // fill array
+            int i;
+            Random r = new Random();
+            drops = new ArrayList<float[]>();
+
+            for (i = 0; i <= 150; i++) {
+                drops.add(new float[]{r.nextInt(Platformer.WIDTH), r.nextInt(Platformer.HEIGHT), r.nextInt(5)});
+            }
+        }
+
+        // update positions
+        for (float[] d : drops) {
+            if (d[1] + ( d[2] / 5f ) > Platformer.HEIGHT) {
+                d[1] = 0;
+            } else {
+                d[1] += ( d[2] / 5f );
+            }
+        }
+
+        // draw
+        g.setColor(new Color(1f,1f,1f,0.5f));
+        for (float[] d : drops) {
+            g.fill(new Circle(d[0] + offset[0] / Platformer.ZOOM, d[1] + (offset[1] / Platformer.ZOOM), d[2]));
+        }
+    }
+
+    public static float[] offsetValues(int x, int y, float[] offset) {
+        return new float[]{x + offset[0] / Platformer.ZOOM, y + (offset[1] / Platformer.ZOOM)};
     }
 }

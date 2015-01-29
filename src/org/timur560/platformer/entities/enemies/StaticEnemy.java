@@ -4,12 +4,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.timur560.platformer.main.Game;
 
+import java.util.List;
+
 /**
  * Created by qwer on 23.01.15.
  */
 public class StaticEnemy extends Enemy {
 
-    public StaticEnemy(Game g, float[] vertices) {
+    public StaticEnemy(Game g, List<Long> vertices) {
         super(g, vertices);
     }
 

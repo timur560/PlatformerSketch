@@ -37,7 +37,7 @@ public class Player extends GameObject {
 
     public Player(Game g) throws SlickException {
         super(g);
-        shape = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 45, 45);
+        shape = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 30, 45);
         setWeapon(new Gun(game, this));
     }
 
@@ -191,7 +191,7 @@ public class Player extends GameObject {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.setColor(Color.blue);
         if (Platformer.DEBUG_MODE) g.draw(shape);
-        g.drawAnimation(current, shape.getX(), shape.getY());
+        g.drawAnimation(current, shape.getX() - 7, shape.getY());
 
         weapon.render(gc, g);
     }

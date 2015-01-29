@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.Helper;
@@ -22,6 +23,7 @@ public class Level {
     private List<Ladder> ladders;
     private List<Enemy> enemies;
     private List<Exit> exits;
+    private List<Heart> hearts;
 
     private float width = 2000;
     private float height = 900;
@@ -61,7 +63,7 @@ public class Level {
         ladders = new ArrayList<Ladder>();
 
         for (List<Long> vertices : (List<List<Long>>) params.get("ladders")) {
-            ladders.add(new Ladder(vertices.get(0), vertices.get(1), vertices.get(2)));
+            ladders.add(new Ladder(game, vertices.get(0), vertices.get(1), vertices.get(2)));
         }
 
         // enemies
@@ -71,23 +73,13 @@ public class Level {
             if (enemyType.equals("static")) {
                 for (Map staticEnemy : ((Map<String,List<Map>>) params.get("enemies")).get(enemyType)) {
                     List<Long> vertices = (List)staticEnemy.get("vertices");
-                    floatArray = new float[vertices.size()];
-                    i = 0;
-                    for (Long vertex : vertices) {
-                        floatArray[i++] = vertex.floatValue();
-                    }
-                    enemies.add(new StaticEnemy(game, floatArray));
+                    enemies.add(new StaticEnemy(game, vertices));
                 }
             } else if (enemyType.equals("moving")) {
                 for (Map movingEnemy : ((Map<String,List<Map>>) params.get("enemies")).get(enemyType)) {
                     List<Long> vertices = (List)movingEnemy.get("vertices");
-                    floatArray = new float[vertices.size()];
-                    i = 0;
-                    for (Long vertex : vertices) {
-                        floatArray[i++] = vertex.floatValue();
-                    }
 
-                    enemies.add(new MovingEnemy(game, floatArray, (List<List<Long>>)movingEnemy.get("path"),
+                    enemies.add(new MovingEnemy(game, vertices, (List<List<Long>>)movingEnemy.get("path"),
                             (Double)movingEnemy.get("speed"), true));
                 }
             }
@@ -99,6 +91,15 @@ public class Level {
         for (Map exit : ((List<Map>) params.get("exits"))) {
             exits.add(new Exit(game, (List<Long>) exit.get("wall"), (List<Long>) exit.get("door"),
                     new ActionTerminal(game, (List<Long>) exit.get("terminal"))));
+        }
+
+        // hearts
+        hearts = new ArrayList<Heart>();
+
+        for (Map heart : ((List<Map>) params.get("hearts"))) {
+            hearts.add(new Heart(game, ((List<Long>) heart.get("pos")).get(0), ((List<Long>) heart.get("pos")).get(1),
+                    (String) heart.get("secret"), (Boolean) heart.get("fake")));
+
         }
 
     }
@@ -135,31 +136,22 @@ public class Level {
     }
 
     public void init() throws SlickException {
-        for (Enemy e : enemies) {
-            e.init();
-        }
-
-        for (Exit e : exits) {
-            e.init();
-        }
+        for (Enemy e : enemies) e.init();
+        for (Exit e : exits) e.init();
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
+        int i;
 
-        int i = 0;
         for (i = 0; i < enemies.size(); i++) {
             if (enemies.get(i).isDead()) {
                 enemies.remove(i);
             }
         }
 
-        for (Enemy e : enemies) {
-            e.update(gc, delta);
-        }
-
-        for (Exit e : exits) {
-            e.update(gc, delta);
-        }
+        for (Enemy e : enemies) e.update(gc, delta);
+        for (Exit e : exits) e.update(gc, delta);
+        for (Heart h : hearts) h.update(gc, delta);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -168,8 +160,10 @@ public class Level {
         float bgX = offset[0] * ((width - bg.getWidth())) / (width - Platformer.WIDTH);
         float bgY = offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
 
+        // parallax background
         g.drawImage(bg, bgX, bgY);
 
+        // level static objects image
         g.drawImage(levelImg, 0, 0);
 
         if (Platformer.DEBUG_MODE) drawDebugLines(g, 50);
@@ -180,29 +174,17 @@ public class Level {
             g.draw(p);
         }
 
-        g.setColor(Color.yellow);
+        for (Ladder l : ladders) l.render(gc, g);
+        for (Enemy e : enemies) e.render(gc, g);
+        for (Exit e : exits) e.render(gc, g);
+        for (Heart h : hearts) h.render(gc, g);
 
-        for (final Ladder l : ladders) {
-            if (Platformer.DEBUG_MODE) g.draw(l.toShape());
-
-//            int i;
-//            for (i = 0; i <= l.toShape().getHeight(); i += 50) {
-//                g.drawImage(staticSprite.getSubImage(0,0), l.toShape().getX() - 10, l.toShape().getY() + i);
-//            }
-        }
-
-        g.setColor(Color.red);
-
-        for (Enemy e : enemies) {
-            e.render(gc, g);
-        }
-
-        for (Exit e : exits) {
-            e.render(gc, g);
-        }
+        Helper.renderSnow(g, offset);
     }
 
     public boolean collidesWith (Shape s) {
+        if (s.getX() < 0 || s.getX() + s.getWidth() > width) return true;
+
         for (Shape p : platforms) {
             if (p.intersects(s)) return true;
         }
@@ -216,7 +198,7 @@ public class Level {
 
     public boolean collidesWithLadder(Shape s) {
         for (Ladder l : ladders) {
-            if (l.toShape().intersects(s)) return true;
+            if (l.getShape().intersects(s)) return true;
         }
 
         return false;
@@ -259,4 +241,11 @@ public class Level {
         }
     }
 
+    public long getHeartsTotal() {
+        return hearts.stream().filter(h -> !h.getFake()).count();
+    }
+
+    public long getHeartsCollected() {
+        return hearts.stream().filter(h -> !h.getFake() && h.getCollected()).count();
+    }
 }
