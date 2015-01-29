@@ -18,7 +18,7 @@ import java.util.List;
  *
  *   "enemies" : [
  *       {
- *          "rect" : [4, 0.5, 0],  /// width (4 * Platformer.CELL_SIZE), height, offset
+ *          "rect" : [4, 0.5, 0, 0],  /// width (4 * Platformer.CELL_SIZE), height, left offset, top offset
  *          "path" : [2, 24, 4,24] // if 2 numbers - static cell coordinates, if 4 - moving between them
  *          "speed" : 0.3, // required for moving
  *          "canDie" : true,
