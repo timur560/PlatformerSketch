@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.timur560.platformer.Platformer;
+import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.entities.*;
 import org.timur560.platformer.entities.enemies.*;
 import org.timur560.platformer.main.Game;
@@ -29,14 +30,13 @@ public class Level {
 
     private Map params = new HashMap();
 
-    private Image bg; // tmp
-    private SpriteSheet staticSprite;
+    private Image bg, levelImg; // tmp
 
     protected Game game;
 
     public Level(org.timur560.platformer.main.Game g) {
         game = g;
-        load("2");
+        load("3");
 
         float[] floatArray;
         int i;
@@ -52,26 +52,16 @@ public class Level {
         // platforms
         platforms = new ArrayList<Shape>();
 
-
         for (List<Long> vertices : (List<List<Long>>) params.get("shapes")) {
-            floatArray = new float[vertices.size()];
-            i = 0;
-            for (Long vertex : vertices) {
-                floatArray[i++] = vertex.floatValue();
-            }
-            platforms.add(new Polygon(floatArray));
+            platforms.add(Helper.cellsToPolygon(vertices.get(0), vertices.get(1), vertices.get(2), vertices.get(3)));
+
         }
 
         // ladders
         ladders = new ArrayList<Ladder>();
 
         for (List<Long> vertices : (List<List<Long>>) params.get("ladders")) {
-            floatArray = new float[vertices.size()];
-            i = 0;
-            for (Long vertex : vertices ) {
-                floatArray[i++] = vertex.floatValue();
-            }
-            ladders.add(new Ladder(floatArray));
+            ladders.add(new Ladder(vertices.get(0), vertices.get(1), vertices.get(2)));
         }
 
         // enemies
@@ -137,14 +127,7 @@ public class Level {
         // tmp
         try {
             bg = new Image(this.getClass().getResource("/res/images/bg.png").getFile());
-        } catch (SlickException e) {
-            e.printStackTrace();
-        }
-
-        // tmp
-        // static objects (ladder, ...) sprite sheet
-        try {
-            staticSprite = new SpriteSheet(new Image(this.getClass().getResource("/res/images/static.png").getFile()), 50,50);
+            levelImg = new Image(this.getClass().getResource("/res/images/level1.png").getFile());
         } catch (SlickException e) {
             e.printStackTrace();
         }
@@ -180,22 +163,20 @@ public class Level {
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-
         float[] offset = game.getOffset();
-
-        // max offset = width - Platformer.WIDTH
-        // width - Platformer.WIDTH / offet[0] = (width - bg.getWidth()) / bgx
 
         float bgX = offset[0] * ((width - bg.getWidth())) / (width - Platformer.WIDTH);
         float bgY = offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
 
         g.drawImage(bg, bgX, bgY);
 
+        g.drawImage(levelImg, 0, 0);
+
         if (Platformer.DEBUG_MODE) drawDebugLines(g, 50);
 
         g.setColor(Color.green);
 
-        for (Shape p : platforms) {
+        if (Platformer.DEBUG_MODE) for (Shape p : platforms) {
             g.draw(p);
         }
 
@@ -204,10 +185,10 @@ public class Level {
         for (final Ladder l : ladders) {
             if (Platformer.DEBUG_MODE) g.draw(l.toShape());
 
-            int i;
-            for (i = 0; i <= l.toShape().getHeight(); i += 50) {
-                g.drawImage(staticSprite.getSubImage(0,0), l.toShape().getX() - 10, l.toShape().getY() + i);
-            }
+//            int i;
+//            for (i = 0; i <= l.toShape().getHeight(); i += 50) {
+//                g.drawImage(staticSprite.getSubImage(0,0), l.toShape().getX() - 10, l.toShape().getY() + i);
+//            }
         }
 
         g.setColor(Color.red);

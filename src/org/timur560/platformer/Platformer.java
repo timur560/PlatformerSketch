@@ -13,7 +13,7 @@ import org.timur560.platformer.main.Menu;
 
 public class Platformer extends StateBasedGame {
 
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
 
     public static String NAME = "Platformer Sketch";
 

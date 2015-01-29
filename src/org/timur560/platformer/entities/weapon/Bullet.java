@@ -23,7 +23,7 @@ public class Bullet {
         this.x2 = x2;
         this.y2 = y2;
         weapon = w;
-        s = new Rectangle(x1, y1, 20, 20);
+        s = new Rectangle(x1, y1, 30, 30);
 
         try {
             staticSprite = new SpriteSheet(new Image(this.getClass().getResource("/res/images/static.png").getFile()), 50,50);

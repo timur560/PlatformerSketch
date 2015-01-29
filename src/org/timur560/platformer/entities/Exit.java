@@ -3,7 +3,9 @@ package org.timur560.platformer.entities;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.GameObject;
+import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.main.Game;
 
 import java.util.List;
@@ -18,11 +20,21 @@ public class Exit extends GameObject {
     private long prevToggle = 0;
     private int delay = 300;
 
+    private SpriteSheet tileset;
+
     public Exit(Game g, List<Long> wall, List<Long> door, ActionTerminal at) {
         super(g);
         terminal = at;
-        wallShape = new Rectangle(wall.get(0) + 15, wall.get(1), 20, wall.get(2));
-        doorShape = new Rectangle(door.get(0), door.get(1), 50, 100);
+        float[] cWall = Helper.cellsToPx(wall.get(0), wall.get(1));
+        float[] cDoor = Helper.cellsToPx(door.get(0), door.get(1));
+        wallShape = new Rectangle(cWall[0] + 15, cWall[1], 20, wall.get(2) * Helper.CELL_SIZE);
+        doorShape = new Rectangle(cDoor[0], cDoor[1], Helper.CELL_SIZE, Helper.CELL_SIZE * 2);
+
+        try {
+            tileset = new SpriteSheet(new Image(this.getClass().getResource("/res/images/tileset1.png").getFile()), 50, 50);
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
@@ -37,7 +49,11 @@ public class Exit extends GameObject {
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (terminal.getState() == ActionTerminal.STATE_CLOSED) {
-            g.draw(wallShape);
+            if (Platformer.DEBUG_MODE) g.draw(wallShape);
+            int i;
+            for (i = 0; i < wallShape.getHeight(); i += 50) {
+                g.drawImage(tileset.getSubImage(0, 2), wallShape.getX() - 15, wallShape.getY() + i);
+            }
         }
 
         g.setColor(Color.black);

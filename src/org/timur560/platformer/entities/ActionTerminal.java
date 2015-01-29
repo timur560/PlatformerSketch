@@ -1,12 +1,11 @@
 package org.timur560.platformer.entities;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.GameObject;
+import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.main.Game;
 
 import java.util.List;
@@ -20,9 +19,18 @@ public class ActionTerminal extends GameObject {
 
     private int state = STATE_CLOSED;
 
+    private SpriteSheet tileset;
+
     public ActionTerminal(Game g, List<Long> pos) {
         super(g);
-        shape = new Rectangle(pos.get(0), pos.get(1), 50, 50);
+        float[] c = Helper.cellsToPx(pos.get(0), pos.get(1));
+        shape = new Rectangle(c[0], c[1], Helper.CELL_SIZE, Helper.CELL_SIZE);
+
+        try {
+            tileset = new SpriteSheet(new Image(this.getClass().getResource("/res/images/tileset1.png").getFile()), 50, 50);
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -31,9 +39,14 @@ public class ActionTerminal extends GameObject {
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if (state == STATE_OPENED) g.setColor(Color.green);
-        if (state == STATE_CLOSED) g.setColor(Color.red);
-        g.draw(shape);
+        if (state == STATE_OPENED) {
+            g.setColor(Color.green);
+            g.drawImage(tileset.getSubImage(2, 2), shape.getX(), shape.getY());
+        } else if (state == STATE_CLOSED) {
+            g.setColor(Color.red);
+            g.drawImage(tileset.getSubImage(1, 2), shape.getX(), shape.getY());
+        }
+        if (Platformer.DEBUG_MODE) g.draw(shape);
     }
 
     public void toggle() {
