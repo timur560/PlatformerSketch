@@ -4,7 +4,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.timur560.platformer.Platformer;
+import org.timur560.platformer.core.Active;
 import org.timur560.platformer.entities.Player;
 import org.timur560.platformer.entities.enemies.*;
 import org.timur560.platformer.main.Game;
@@ -17,17 +19,12 @@ import java.util.List;
  */
 public class Gun extends Weapon implements Shootable {
     protected List<Bullet> bullets;
-
     protected int maxBulletsCount = 100;
 
-    public Gun(Game g, Player p) {
-        super(g, p);
-        shape = new Rectangle(p.getX() + 20, p.getY() - 20, 30, 15);
-        bullets = new ArrayList<Bullet>();
-    }
-
-    public void init() {
-
+    public Gun(Game g, Active o) {
+        super(g, o);
+//        shape = new Rectangle(owner.getShape().getX() + 20, owner.getShape().getY() - 20, 30, 15);
+        bullets = new ArrayList<>();
     }
 
     // shoot
@@ -40,30 +37,44 @@ public class Gun extends Weapon implements Shootable {
 
         prevAct = System.currentTimeMillis();
 
+        Shape s = owner.getShape();
+
+
         if (bullets.size() < maxBulletsCount) {
-            float destX = player.getX(), destY = player.getY();
-            if (player.getDirection() == Player.UP) {
+            float destX = s.getX(), destY = s.getY();
+            if (owner.getDirection() == Player.UP) {
                 destY -= 500;
-            } else if (player.getDirection() == Player.RIGHT) {
+            } else if (owner.getDirection() == Player.RIGHT) {
                 destX += 500;
-            } else if (player.getDirection() == Player.DOWN) {
+            } else if (owner.getDirection() == Player.DOWN) {
                 destY += 500;
-            } else if (player.getDirection() == Player.LEFT) {
+            } else if (owner.getDirection() == Player.LEFT) {
                 destX -= 500;
             }
 
-            bullets.add(new Bullet(game, this, player.getX() + 15, player.getY() + 15, destX + 20, destY + 20));
+            bullets.add(new Bullet(game, this, s.getX() + 15, s.getY() + 15, destX + 20, destY + 20));
         }
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
         // check bullets if can kill enemy
-        enemiesLoop : for (Enemy e : player.getLevel().getEnemies()) {
+        if (owner instanceof Player) {
+            enemiesLoop:
+            for (Enemy e : game.getLevel().getEnemies()) {
+                for (Bullet b : bullets) {
+                    if (b.getShape().intersects(e.getShape())) {
+                        e.die();
+                        b.die();
+                        continue enemiesLoop;
+                    }
+                }
+            }
+        } else {
             for (Bullet b : bullets) {
-                if (b.getShape().intersects(e.getShape())) {
-                    e.die();
+                if (b.getShape().intersects(game.getPlayer().getShape())) {
+                    game.getPlayer().die();
                     b.die();
-                    continue enemiesLoop;
+                    break;
                 }
             }
         }
@@ -83,15 +94,9 @@ public class Gun extends Weapon implements Shootable {
                 bullets.remove(i);
             }
         }
-
-        //
-        shape.setX(player.getX() + 20);
-        shape.setY(player.getY() + 20);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if (Platformer.DEBUG_MODE) g.draw(shape);
-
         for (Bullet b : bullets) {
             b.render(gc, g);
         }

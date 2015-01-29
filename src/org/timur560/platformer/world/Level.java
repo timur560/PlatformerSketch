@@ -16,6 +16,7 @@ import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.entities.*;
 import org.timur560.platformer.entities.enemies.*;
+import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.main.Game;
 
 public class Level {
@@ -69,19 +70,35 @@ public class Level {
         // enemies
         enemies = new ArrayList<Enemy>();
 
-        for (String enemyType : ((Map<String,List>) params.get("enemies")).keySet()) {
-            if (enemyType.equals("static")) {
-                for (Map staticEnemy : ((Map<String,List<Map>>) params.get("enemies")).get(enemyType)) {
-                    List<Long> vertices = (List)staticEnemy.get("vertices");
-                    enemies.add(new StaticEnemy(game, vertices));
-                }
-            } else if (enemyType.equals("moving")) {
-                for (Map movingEnemy : ((Map<String,List<Map>>) params.get("enemies")).get(enemyType)) {
-                    List<Long> vertices = (List)movingEnemy.get("vertices");
+        for (Map e : ((List<Map>) params.get("enemies"))) {
+            if (((List)e.get("path")).size() == 1) { // static
 
-                    enemies.add(new MovingEnemy(game, vertices, (List<List<Long>>)movingEnemy.get("path"),
-                            (Double)movingEnemy.get("speed"), true));
+                Enemy enemy = new StaticEnemy(
+                        game,
+                        ((List<List<Long>>) e.get("path")).get(0),
+                        (String)    e.get("type"), // etc. "snowman"
+                        (boolean)   e.get("canDie"),
+                        ((Long)     e.get("direction")).intValue()
+                );
+
+                if ((boolean) e.get("weapon")) {
+                    enemy.setWeapon(new Gun(game, enemy), ((Long) e.get("shootDelay")).intValue());
                 }
+                enemies.add(enemy);
+            } else  { // moving ( > 1)
+                Enemy enemy = new MovingEnemy(
+                        game,
+                        (String) e.get("type"), // etc. "snowman"
+                        (boolean) e.get("canDie"),
+                        (List<List<Long>>) e.get("path"),
+                        (Double) e.get("speed")
+                );
+
+                if ((boolean) e.get("weapon")) {
+                    enemy.setWeapon(new Gun(game, enemy), ((Long) e.get("shootDelay")).intValue());
+                }
+
+                enemies.add(enemy);
             }
         }
 

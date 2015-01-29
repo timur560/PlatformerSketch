@@ -7,6 +7,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.GameObject;
+import org.timur560.platformer.entities.Player;
 import org.timur560.platformer.main.Game;
 
 /**
@@ -44,7 +45,11 @@ public class Bullet extends GameObject {
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (Platformer.DEBUG_MODE) g.draw(shape);
-        g.drawImage(game.getTileset().getSubImage(2, 1), shape.getX(), shape.getY());
+        if (weapon.getOwner() instanceof Player) {
+            g.drawImage(game.getTileset().getSubImage(2, 1), shape.getX(), shape.getY());
+        } else {
+            g.drawImage(game.getTileset().getSubImage(3, 1), shape.getX(), shape.getY());
+        }
     }
 
     public void die() {

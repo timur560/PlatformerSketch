@@ -5,6 +5,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.ResourceLoader;
 
 import org.timur560.platformer.Platformer;
+import org.timur560.platformer.core.Active;
 import org.timur560.platformer.core.GameObject;
 import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.entities.weapon.Weapon;
@@ -13,24 +14,19 @@ import org.timur560.platformer.main.Game;
 
 import java.net.URISyntaxException;
 
-public class Player extends GameObject {
-    public static int UP    = 1;
-    public static int RIGHT = 2;
-    public static int DOWN  = 3;
-    public static int LEFT  = 4;
-
-    private float gravity       = 0.7f;
-    private float jumpStrength  = -12;
-    private float speed         = 3;
-    private float currentSpeed  = 0;
-    private float inertion      = 0.9f;
-    private float vX            = 0;
-    private float vY            = 0;
-    private int interations     = 5;
-    private int direction       = RIGHT;
-    private int jumpDelay       = 500;
-    private long prevJumpTime   = 0;
-    private boolean dead        = false;
+public class Player extends GameObject implements Active {
+    protected float gravity       = 0.7f;
+    protected float jumpStrength  = -13f;
+    protected float speed         = 3;
+    protected float currentSpeed  = 0;
+    protected float inertion      = 0.9f;
+    protected float vX            = 0;
+    protected float vY            = 0;
+    protected int interations     = 5;
+    protected int direction       = RIGHT;
+    protected int jumpDelay       = 500;
+    protected long prevJumpTime   = 0;
+    protected boolean dead        = false;
 
     private Animation moveLeft, moveRight, stayLeft, stayRight, jumpRight, jumpLeft, moveLadder, stayLadder, current;
     private Weapon weapon;
@@ -202,10 +198,6 @@ public class Player extends GameObject {
 
     public float getY() {
         return shape.getY();
-    }
-
-    public Level getLevel() {
-        return game.getLevel();
     }
 
     public int getDirection() {
