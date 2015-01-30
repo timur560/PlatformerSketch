@@ -16,7 +16,7 @@ public class Platformer extends StateBasedGame {
     public static String NAME = "Blue-Eyed Girl";
     public static int WIDTH = 800;
     public static int HEIGHT = 600;
-    public static float ZOOM = 1.5f;
+    public static float ZOOM = 1.0f;
 
     public Platformer() throws SlickException {
         super(NAME);

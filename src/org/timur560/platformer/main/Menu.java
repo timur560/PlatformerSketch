@@ -1,12 +1,19 @@
 package org.timur560.platformer.main;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.ResourceLoader;
 import org.timur560.platformer.Platformer;
 
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +22,10 @@ import java.util.List;
  */
 public class Menu extends BasicGameState {
     public static int ID = 0;
-
     private StateBasedGame game;
-
     private int currentItemId = 0;
-
     private List<String> items = new ArrayList<String>();
+    private TrueTypeFont fontSmall, fontNormal, fontBig;
 
     @Override
     public int getID() {
@@ -29,6 +34,16 @@ public class Menu extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+        try {
+            fontSmall = new TrueTypeFont(java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(16f), true);
+            fontNormal = new TrueTypeFont(java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(24f), true);
+            fontBig = new TrueTypeFont(java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(36f), true);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         items.add("Play");
         items.add("Quit");
         game = stateBasedGame;
@@ -70,16 +85,14 @@ public class Menu extends BasicGameState {
     @Override
     public void render(GameContainer gc, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         g.setColor(Color.white);
-        g.drawString(Platformer.NAME, Platformer.WIDTH / 2 - g.getFont().getWidth(Platformer.NAME) / 2, 10);
+        fontBig.drawString(Platformer.WIDTH / 2 - fontBig.getWidth(Platformer.NAME) / 2, 50, Platformer.NAME);
 
         int i = 0;
-        for (String item : items) {
+        for (String s : items) {
             if (currentItemId == i) {
-                g.setColor(Color.white);
-                g.drawString(item, Platformer.WIDTH / 2 - g.getFont().getWidth(item) / 2, 50 * (i+2));
+                fontNormal.drawString(Platformer.WIDTH / 2 - fontNormal.getWidth(s) / 2, 50 * (i + 4), s);
             } else {
-                g.setColor(Color.blue);
-                g.drawString(item, Platformer.WIDTH / 2 - g.getFont().getWidth(item) / 2, 50 * (i+2));
+                fontSmall.drawString(Platformer.WIDTH / 2 - fontSmall.getWidth(s) / 2, 50 * (i + 4), s);
             }
             i++;
         }

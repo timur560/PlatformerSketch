@@ -18,6 +18,7 @@ import org.timur560.platformer.entities.*;
 import org.timur560.platformer.entities.enemies.*;
 import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.main.Game;
+import org.timur560.platformer.main.Hint;
 
 public class Level {
     private List<Shape> platforms;
@@ -25,6 +26,7 @@ public class Level {
     private List<Enemy> enemies;
     private List<Exit> exits;
     private List<Heart> hearts;
+    private List<Hint> hints;
 
     private float width = 2000;
     private float height = 900;
@@ -47,10 +49,7 @@ public class Level {
         width = ((Long) params.get("width")).floatValue();
         height = ((Long) params.get("height")).floatValue();
 
-        i = 0;
-        for (Long ep : (List<Long>) params.get("entryPoint")) {
-            entryPoint[i++] = ep.floatValue();
-        }
+        entryPoint = Helper.cellsToPx(((List<Long>) params.get("entryPoint")).get(0), ((List<Long>) params.get("entryPoint")).get(1));
 
         // platforms
         platforms = new ArrayList<Shape>();
@@ -103,7 +102,7 @@ public class Level {
         }
 
         // exits
-        exits = new ArrayList<Exit>();
+        exits = new ArrayList<>();
 
         for (Map exit : ((List<Map>) params.get("exits"))) {
             exits.add(new Exit(game, (List<Long>) exit.get("wall"), (List<Long>) exit.get("door"),
@@ -111,7 +110,7 @@ public class Level {
         }
 
         // hearts
-        hearts = new ArrayList<Heart>();
+        hearts = new ArrayList<>();
 
         for (Map heart : ((List<Map>) params.get("hearts"))) {
             hearts.add(new Heart(game, ((List<Long>) heart.get("pos")).get(0), ((List<Long>) heart.get("pos")).get(1),
@@ -119,6 +118,13 @@ public class Level {
 
         }
 
+        // hints
+        hints = new ArrayList<>();
+
+        for (Map hint : ((List<Map>) params.get("hints"))) {
+            hints.add(new Hint(game, ((List<Long>) hint.get("pos")).get(0), ((List<Long>) hint.get("pos")).get(1),
+                    (String) hint.get("text")));
+        }
     }
 
     public void load(String level) {
@@ -195,6 +201,7 @@ public class Level {
         for (Enemy e : enemies) e.render(gc, g);
         for (Exit e : exits) e.render(gc, g);
         for (Heart h : hearts) h.render(gc, g);
+        for (Hint h : hints) h.render(gc, g);
 
         Helper.renderSnow(g, offset);
     }

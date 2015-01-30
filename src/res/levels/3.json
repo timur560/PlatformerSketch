@@ -3,10 +3,8 @@
   "width": 1900,
   "height" : 1250,
   "time" : 2,
-  "entryPoint": [
-    100,
-    1100
-  ],
+  "effect" : "snow",
+  "entryPoint": [0, 23],
   "exits": [
     {
       "wall": [10, 7, 3],
@@ -24,8 +22,8 @@
   "enemies" : [
     {
       "rect" : [4, 0.5, 0],
-      "path" : [[5, 24], [11, 24]],
-      "speed" : 0.1,
+      "path" : [[6, 22], [11, 22]],
+      "speed" : 0.2,
       "canDie" : false,
       "weapon" : false,
       "type" : "snowflake",
@@ -38,7 +36,7 @@
       "canDie" : true,
       "weapon" : true,
       "type" : "snowman",
-      "shootDelay" : 3000,
+      "shootDelay" : 1000,
       "direction" : 4
     }
   ],
@@ -64,8 +62,20 @@
   ],
   "hints" : [
     {
-      "pos" : [],
-      "text" : []
+      "pos" : [0, 23],
+      "text" : "Now you should find all hearts"
+    },
+    {
+      "pos" : [2, 23],
+      "text" : "Press 'C' to open boxex or dig the snow heaps"
+    },
+    {
+      "pos" : [4, 23],
+      "text" : "Press 'Z' for jump"
+    },
+    {
+      "pos" : [7, 23],
+      "text" : "Snowflake can kill you! Be careful."
     }
   ],
   "hearts" : [
