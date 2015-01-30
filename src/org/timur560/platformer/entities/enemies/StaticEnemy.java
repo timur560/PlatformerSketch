@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class StaticEnemy extends Enemy {
 
-    public StaticEnemy(Game g, List<Long> position, String t, boolean cd, int d) {
-        super(g, position, t, cd, d);
+    public StaticEnemy(Game g, List<Long> pos, List<Double> r, String t, boolean cd, int d) {
+        super(g, pos, r, t, cd, d);
     }
 
     @Override

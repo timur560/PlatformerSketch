@@ -19,18 +19,10 @@ public class ActionTerminal extends GameObject {
 
     private int state = STATE_CLOSED;
 
-    private SpriteSheet tileset;
-
     public ActionTerminal(Game g, List<Long> pos) {
         super(g);
         float[] c = Helper.cellsToPx(pos.get(0), pos.get(1));
         shape = new Rectangle(c[0], c[1], Helper.CELL_SIZE, Helper.CELL_SIZE);
-
-        try {
-            tileset = new SpriteSheet(new Image(this.getClass().getResource("/res/images/tileset1.png").getFile()), 50, 50);
-        } catch (SlickException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -41,10 +33,10 @@ public class ActionTerminal extends GameObject {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (state == STATE_OPENED) {
             g.setColor(Color.green);
-            g.drawImage(tileset.getSubImage(2, 2), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset().getSubImage(1, 2), shape.getX(), shape.getY());
         } else if (state == STATE_CLOSED) {
             g.setColor(Color.red);
-            g.drawImage(tileset.getSubImage(1, 2), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset().getSubImage(2, 2), shape.getX(), shape.getY());
         }
         if (Platformer.DEBUG_MODE) g.draw(shape);
     }

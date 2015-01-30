@@ -8,6 +8,7 @@ import org.newdawn.slick.geom.Shape;
 import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.GameObject;
 import org.timur560.platformer.entities.Player;
+import org.timur560.platformer.entities.enemies.Enemy;
 import org.timur560.platformer.main.Game;
 
 /**
@@ -32,6 +33,12 @@ public class Bullet extends GameObject {
     public void update(GameContainer gc, int delta) throws SlickException {
         // check if bullet intersects wall
         // TODO
+
+        float speed = this.speed;
+
+        if (weapon.getOwner() instanceof Enemy) {
+            speed /= 3;
+        }
 
         t += speed / delta;
 

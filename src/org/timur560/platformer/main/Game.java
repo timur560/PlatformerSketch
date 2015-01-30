@@ -1,9 +1,6 @@
 package org.timur560.platformer.main;
 
 import org.newdawn.slick.*;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -78,7 +75,7 @@ public class Game extends BasicGameState { // BasicGame
     public void init(GameContainer gc, StateBasedGame stateBasedGame) throws SlickException {
         game = stateBasedGame;
 
-        level = new Level(this);
+        level = new Level(this, 1);
         player = new Player(this);
 
         level.init();

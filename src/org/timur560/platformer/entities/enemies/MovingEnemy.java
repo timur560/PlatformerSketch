@@ -19,8 +19,8 @@ public class MovingEnemy extends Enemy {
 
     private SpriteSheet staticSprite;
 
-    public MovingEnemy(Game g, String t, boolean cd, List<List<Long>> p, Double s) {
-        super(g, p.get(0), t, cd, RIGHT);
+    public MovingEnemy(Game g, String t, boolean cd, List<List<Long>> p, List<Double> r, Double s) {
+        super(g, p.get(0), r, t, cd, RIGHT);
         path = p;
         speed = s.floatValue();
     }

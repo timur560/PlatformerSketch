@@ -1,16 +1,21 @@
 {
-  "title": "Level 2",
   "width": 1900,
   "height" : 1250,
-  "time" : 2,
   "effect" : "snow",
-  "entryPoint": [0, 23],
-  "exits": [
+  "portals": [
     {
+      "pos": [0, 23],
+      "dest": [1, 0, 0]
+    },
+    {
+      "pos": [2, 5],
+      "dest": [1, 0, 2]
+    },
+    {
+      "pos": [4, 5],
+      "dest": [2, 0, 0],
       "wall": [10, 7, 3],
-      "door": [2, 5],
-      "terminal": [9, 13],
-      "dest": "1.1"
+      "terminal": [9, 13]
     }
   ],
   "ladders" : [
@@ -21,7 +26,7 @@
   ],
   "enemies" : [
     {
-      "rect" : [4, 0.5, 0],
+      "rect" : [1.0, 1.0, 0.0, 0.0],
       "path" : [[6, 22], [11, 22]],
       "speed" : 0.2,
       "canDie" : false,
@@ -30,13 +35,13 @@
       "direction" : 4
     },
     {
-      "rect" : [4, 0.5, 0],
-      "path" : [[20, 22], [22, 22]],
+      "rect" : [0.6, 1.0, 1.0, 0.0],
+      "path" : [[19, 22], [23, 22]],
       "speed" : 0.1,
       "canDie" : true,
       "weapon" : true,
       "type" : "snowman",
-      "shootDelay" : 1000,
+      "shootDelay" : 2000,
       "direction" : 4
     }
   ],
@@ -63,11 +68,11 @@
   "hints" : [
     {
       "pos" : [0, 23],
-      "text" : "Now you should find all hearts"
+      "text" : "Find your love! Collect all the hearts!"
     },
     {
       "pos" : [2, 23],
-      "text" : "Press 'C' to open boxex or dig the snow heaps"
+      "text" : "Press 'C' to open boxes or dig the snow heaps"
     },
     {
       "pos" : [4, 23],
@@ -75,8 +80,17 @@
     },
     {
       "pos" : [7, 23],
-      "text" : "Snowflake can kill you! Be careful."
+      "text" : "Snowflake are dangerous! Be careful"
+    },
+    {
+      "pos" : [4, 5],
+      "text" : "This is portal. Press 'C' for teleportation"
+    },
+    {
+      "pos" : [9, 13],
+      "text" : "This is terminal. Press 'C' to activate"
     }
+
   ],
   "hearts" : [
     {

@@ -36,12 +36,24 @@ public abstract class Enemy extends GameObject implements Active {
     protected String type = "snowflake";
     protected int direction = RIGHT;
 
-    public Enemy(Game g, List<Long> pos, String t, boolean cd, int d) {
+    public Enemy(Game g, List<Long> pos, List<Double> rect, String t, boolean cd, int d) {
         super(g);
         type = t;
         canDie = cd;
         direction = d;
-        shape = Helper.cellsToPolygon(pos.get(0), pos.get(1), pos.get(0) + 1, pos.get(1));
+
+        // shape = Helper.cellsToPolygon(pos.get(0), pos.get(1), pos.get(0) + 1, pos.get(1));
+
+        float[] p = Helper.cellsToPx(pos.get(0), pos.get(1));
+        p[0] += rect.get(2).floatValue() * Helper.CELL_SIZE;
+        p[1] += rect.get(3).floatValue() * Helper.CELL_SIZE;
+
+        shape = new Polygon(new float[]{
+                p[0],p[1],
+                p[0] + rect.get(0).floatValue() * Helper.CELL_SIZE,p[1],
+                p[0] + rect.get(0).floatValue() * Helper.CELL_SIZE, p[1] + rect.get(1).floatValue() * Helper.CELL_SIZE,
+                p[0],p[1] + rect.get(1).floatValue() * Helper.CELL_SIZE
+        });
     }
 
     public void setWeapon(Weapon w, int sd) {
@@ -54,7 +66,11 @@ public abstract class Enemy extends GameObject implements Active {
         if (dead) return;
         g.setColor(Color.red);
         if (Platformer.DEBUG_MODE) g.draw(shape);
-        g.drawImage(getSprite(), shape.getX(), shape.getY());
+        if (type.equals("snowman")) {
+            g.drawImage(getSprite(), shape.getX() - 10, shape.getY());
+        } else {
+            g.drawImage(getSprite(), shape.getX(), shape.getY());
+        }
         if (weapon != null) weapon.render(gc, g);
     }
 
