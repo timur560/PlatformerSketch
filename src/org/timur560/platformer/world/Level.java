@@ -159,7 +159,7 @@ public class Level {
 
         for (Map p : ((List<Map>) params.get("portals"))) {
             if (((List<Long>) p.get("dest")).get(0) == id) {
-                if (((List<Long>) p.get("dest")).get(0) == id && ((List<Long>) p.get("dest")).get(1) == 0) {
+                if (((List<Long>) p.get("dest")).get(0) == id && ((List<Long>) p.get("dest")).get(1) == 0 && ((List<Long>) p.get("dest")).get(2) == 0) {
                     entryPoint = Helper.cellsToPx(((List<Long>) p.get("pos")).get(0), ((List<Long>) p.get("pos")).get(1));
                 }
 
