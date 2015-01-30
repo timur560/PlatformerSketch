@@ -30,6 +30,7 @@ public class Level {
 
     // zone vars
     protected List<Shape> platforms;
+    protected List<MovingPlatform> movingPlatforms;
     protected List<Ladder> ladders;
     protected List<Enemy> enemies;
     protected List<Portal> portals;
@@ -186,6 +187,13 @@ public class Level {
             hints.add(new Hint(game, ((List<Long>) hint.get("pos")).get(0), ((List<Long>) hint.get("pos")).get(1),
                     (String) hint.get("text")));
         }
+
+        // moving platforms
+        movingPlatforms = new ArrayList<>();
+
+        for (Map mp : ((List<Map>) params.get("movingPlatforms"))) {
+            movingPlatforms.add(new MovingPlatform(game, (List<List<Long>>) mp.get("path"), (Long) mp.get("width"), (Double) mp.get("speed")));
+        }
     }
 
     public void init() throws SlickException {
@@ -205,6 +213,7 @@ public class Level {
         for (Enemy e : enemies) e.update(gc, delta);
         for (Portal e : portals) e.update(gc, delta);
         for (Heart h : hearts) h.update(gc, delta);
+        for (MovingPlatform mp: movingPlatforms) mp.update(gc, delta);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -232,6 +241,7 @@ public class Level {
         for (Portal e : portals) e.render(gc, g);
         for (Heart h : hearts) h.render(gc, g);
         for (Hint h : hints) h.render(gc, g);
+        for (MovingPlatform mp: movingPlatforms) mp.render(gc, g);
 
         if (effect.equals("snow")) {
             Helper.renderSnow(g, offset);
@@ -245,8 +255,12 @@ public class Level {
             if (p.intersects(s)) return true;
         }
 
-        for (Portal e : portals) {
-            if (e.intersects(s)) return true;
+        for (Portal p : portals) {
+            if (p.intersects(s)) return true;
+        }
+
+        for (MovingPlatform mp : movingPlatforms) {
+            if (mp.getShape().intersects(s)) return true;
         }
 
         return false;
@@ -294,6 +308,10 @@ public class Level {
 
     public long getHeartsCollected() {
         return hearts.stream().filter(h -> !h.getFake() && h.getCollected()).count();
+    }
+
+    public List<MovingPlatform> getMovingPlatforms() {
+        return movingPlatforms;
     }
 
     // Draw a grid on the screen for easy positioning

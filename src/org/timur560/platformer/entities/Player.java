@@ -2,6 +2,7 @@ package org.timur560.platformer.entities;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.util.ResourceLoader;
 
 import org.timur560.platformer.Platformer;
@@ -11,6 +12,7 @@ import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.entities.weapon.Weapon;
 import org.timur560.platformer.world.Level;
 import org.timur560.platformer.main.Game;
+import org.timur560.platformer.world.MovingPlatform;
 
 import java.net.URISyntaxException;
 
@@ -72,6 +74,13 @@ public class Player extends GameObject implements Active {
             shape.setY(level.getEntryPoint()[1]);
             dead = false;
             return;
+        }
+
+        // moving platform collision
+        for (MovingPlatform mp : game.getLevel().getMovingPlatforms()) {
+            if (shape.intersects(mp.getShape())) {
+                shape.setY(mp.getShape().getY() - shape.getHeight());
+            }
         }
 
         // ladder collision

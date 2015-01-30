@@ -10,6 +10,7 @@ import org.newdawn.slick.util.ResourceLoader;
 import org.timur560.platformer.Platformer;
 import org.timur560.platformer.entities.Player;
 import org.timur560.platformer.world.Level;
+import org.timur560.platformer.world.MovingPlatform;
 
 import java.awt.FontFormatException;
 import java.awt.Font;

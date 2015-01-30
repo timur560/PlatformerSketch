@@ -14,9 +14,7 @@ import java.util.List;
 public class MovingEnemy extends Enemy {
     private List<List<Long>> path;
     private int posIndex = 0;
-
     private float t = 0, speed = 0.5f;
-
     private SpriteSheet staticSprite;
 
     public MovingEnemy(Game g, String t, boolean cd, List<List<Long>> p, List<Double> r, Double s) {
