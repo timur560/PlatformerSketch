@@ -24,11 +24,12 @@ public class Level {
 
     // common level vars
     protected int id;
-    protected float[] entryPoint = new float[]{0.0f, 0.0f};
-    protected long time;
+    protected int zone;
+    protected long time, startTime;
     protected String title, description;
 
     // zone vars
+    protected float[] entryPoint = new float[]{0.0f, 0.0f};
     protected List<Shape> platforms;
     protected List<MovingPlatform> movingPlatforms;
     protected List<MovingBlock> movingBlocks;
@@ -67,12 +68,20 @@ public class Level {
 
         title = (String) params.get("title");
         description = (String) params.get("description");
-        time = ((Long) params.get("time")).longValue();
 
-        loadZone("0");
+        startTime = System.currentTimeMillis();
+        time = ((Long) params.get("time")).longValue() * 60 * 60 * 1000;
+
+        loadZone(0);
     }
 
-    public void loadZone(String zone) {
+    public void loadZone(int z) {
+        loadZone(z, 0);
+    }
+
+    public void loadZone(int z, int portal) {
+        zone = z;
+
         if (ResourceLoader.getResource("res/levels/" + id + "/" + zone + ".json") == null) {
             System.out.println("No resources for such zone " + id + "/" + zone);
             System.exit(0);
@@ -92,13 +101,14 @@ public class Level {
 
         Map params = (Map) result;
 
-        // TODO
+        // TODO >>
         try {
-            bg = new Image(ResourceLoader.getResource("res/images/bg.png").getFile());
-            zoneImage = new Image(ResourceLoader.getResource("res/images/level1.png").getFile());
+            bg = new Image(ResourceLoader.getResource("res/images/" + id + "/" + zone + "/bg.png").getFile());
+            zoneImage = new Image(ResourceLoader.getResource("res/images/" + id + "/" + zone + "/cover.png").getFile());
         } catch (SlickException e) {
             e.printStackTrace();
         }
+        // <<
 
         width = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[0];
         height = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[1];
@@ -161,7 +171,7 @@ public class Level {
 
         for (Map p : ((List<Map>) params.get("portals"))) {
             if (((List<Long>) p.get("dest")).get(0) == id) {
-                if (((List<Long>) p.get("dest")).get(0) == id && ((List<Long>) p.get("dest")).get(1) == 0 && ((List<Long>) p.get("dest")).get(2) == 0) {
+                if (((List<Long>) p.get("dest")).get(0) == id && ((List<Long>) p.get("dest")).get(2) == portal) {
                     entryPoint = Helper.cellsToPx(((List<Long>) p.get("pos")).get(0), ((List<Long>) p.get("pos")).get(1));
                 }
 
@@ -335,6 +345,14 @@ public class Level {
 
     public List<MovingPlatform> getMovingPlatforms() {
         return movingPlatforms;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getZone() {
+        return zone;
     }
 
     // Draw a grid on the screen for easy positioning

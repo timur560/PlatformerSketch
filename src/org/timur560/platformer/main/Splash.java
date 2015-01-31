@@ -24,6 +24,7 @@ public class Splash extends BasicGameState {
     public static int ID = 2;
 
     private StateBasedGame game;
+    private GameContainer container;
     private int level;
     private String title, description;
     private TrueTypeFont fontSmall, fontNormal, fontBig;
@@ -36,7 +37,15 @@ public class Splash extends BasicGameState {
     @Override
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         game = stateBasedGame;
-        ((Platformer) game).getCurrentLevel();
+        container = gameContainer;
+    }
+
+    @Override
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        super.enter(container, game);
+
+        level = ((Platformer) game).getCurrentLevel();
+
         if (ResourceLoader.getResource("res/levels/" + level + "/common.json") == null) {
             System.out.println("No common.json for level #" + level);
             System.exit(0);
@@ -73,9 +82,14 @@ public class Splash extends BasicGameState {
     public void keyReleased(int key, char c) {
         switch (key) {
             case Input.KEY_ENTER:
-                game.enterState(org.timur560.platformer.main.Game.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                try {
+                    int gameId = org.timur560.platformer.main.Game.ID;
+                    game.getState(gameId).init(container, game);
+                    game.enterState(gameId, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                } catch (SlickException e) {
+                    e.printStackTrace();
+                }
                 break;
-
         }
     }
 

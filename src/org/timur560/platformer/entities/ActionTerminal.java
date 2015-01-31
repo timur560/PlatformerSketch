@@ -14,10 +14,11 @@ import java.util.List;
  * Created by timur on 27.01.15.
  */
 public class ActionTerminal extends GameObject {
-    public static int STATE_CLOSED = 0;
-    public static int STATE_OPENED = 1;
+    public static int STATE_INACTIVE = 0;
+    public static int STATE_CLOSED = 1;
+    public static int STATE_OPENED = 2;
 
-    private int state = STATE_CLOSED;
+    private int state = STATE_INACTIVE;
 
     public ActionTerminal(Game g, List<Long> pos) {
         super(g);
@@ -27,11 +28,18 @@ public class ActionTerminal extends GameObject {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
+        if (game.getLevel().getHeartsCollected() == game.getLevel().getHeartsTotal()
+                && state == STATE_INACTIVE) {
+            state = STATE_CLOSED;
+        }
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if (state == STATE_OPENED) {
+        if (state == STATE_INACTIVE) {
+            g.setColor(Color.black);
+            g.drawImage(game.getTileset().getSubImage(3, 2), shape.getX(), shape.getY());
+        } else if (state == STATE_OPENED) {
             g.setColor(Color.green);
             g.drawImage(game.getTileset().getSubImage(1, 2), shape.getX(), shape.getY());
         } else if (state == STATE_CLOSED) {
@@ -42,6 +50,7 @@ public class ActionTerminal extends GameObject {
     }
 
     public void toggle() {
+        if (state == STATE_INACTIVE) return;
         if (state == STATE_CLOSED) state = STATE_OPENED;
         else state = STATE_CLOSED;
     }

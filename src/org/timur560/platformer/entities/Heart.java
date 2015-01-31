@@ -34,7 +34,7 @@ public class Heart extends GameObject {
             opened = true;
         } else if (secret.equals("box")) {
             secretShape = new Rectangle(c[0] + 10, c[1] + 10, 30, 40);
-        } else if (secret.equals("snow")) {
+        } else if (secret.equals("snowheap")) {
             secretShape = new Rectangle(c[0] + 10, c[1] + 30, 40, 20);
         }
     }
@@ -80,7 +80,7 @@ public class Heart extends GameObject {
 
             if (secret.equals("box")) {
                 g.drawImage(game.getTileset().getSubImage(1, 4), secretShape.getX() - 10, secretShape.getY() - 10);
-            } else if (secret.equals("snow")) {
+            } else if (secret.equals("snowheap")) {
                 g.drawImage(game.getTileset().getSubImage(2, 0), secretShape.getX() - 10, secretShape.getY() - 30);
             }
         }

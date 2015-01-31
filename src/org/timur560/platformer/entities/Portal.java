@@ -26,11 +26,13 @@ public class Portal extends GameObject {
     protected long prevToggle = 0;
     protected int delay = 300;
     protected List<Long> dest;
+    protected float[] pos;
+    private Shape pportalShape;
 
-    public Portal(Game g, List<Long> pos, List<Long> d) {
+    public Portal(Game g, List<Long> p, List<Long> d) {
         super(g);
-        float[] cPos = Helper.cellsToPx(pos.get(0), pos.get(1));
-        portalShape = new Rectangle(cPos[0], cPos[1], Helper.CELL_SIZE, Helper.CELL_SIZE);
+        pos = Helper.cellsToPx(p.get(0), p.get(1));
+        portalShape = new Rectangle(pos[0], pos[1], Helper.CELL_SIZE, Helper.CELL_SIZE);
         dest = d;
     }
 
@@ -42,18 +44,28 @@ public class Portal extends GameObject {
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-        if (gc.getInput().isKeyDown(Input.KEY_C) && terminal != null) {
-            if (terminal.getShape().intersects(game.getPlayer().getShape())
-                    && (prevToggle == 0 || System.currentTimeMillis() >= prevToggle + delay)) {
-                terminal.toggle();
-                prevToggle = System.currentTimeMillis();
+        if (gc.getInput().isKeyDown(Input.KEY_C)) {
+            if (prevToggle != 0 && System.currentTimeMillis() < prevToggle + delay) {
+                return;
             }
+
+            Shape ps = game.getPlayer().getShape();
+
+            if (terminal != null) {
+                if (terminal.getShape().intersects(ps)) {
+                    terminal.toggle();
+                }
+            }
+
+            prevToggle = System.currentTimeMillis();
         }
+
+        if (terminal != null) terminal.update(gc, delta);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (terminal != null) {
-            if (terminal.getState() == ActionTerminal.STATE_CLOSED) {
+            if (terminal.getState() != ActionTerminal.STATE_OPENED) {
                 if (Platformer.DEBUG_MODE) g.draw(wallShape);
                 int i;
                 for (i = 0; i < wallShape.getHeight(); i += 50) {
@@ -70,9 +82,21 @@ public class Portal extends GameObject {
 
     public boolean intersects(Shape s) {
         if (terminal != null) {
-            return terminal.getState() == ActionTerminal.STATE_CLOSED && s.intersects(wallShape);
+            return terminal.getState() != ActionTerminal.STATE_OPENED && s.intersects(wallShape);
         } else {
             return false;
         }
+    }
+
+    public float[] getPos() {
+        return pos;
+    }
+
+    public Shape getPortalShape() {
+        return portalShape;
+    }
+
+    public List<Long> getDest() {
+        return dest;
     }
 }

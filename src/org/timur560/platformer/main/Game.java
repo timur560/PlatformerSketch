@@ -22,7 +22,7 @@ public class Game extends BasicGameState { // BasicGame
     protected Player player;
     protected StatusBar statusBar;
     protected SpriteSheet tileset;
-    protected TrueTypeFont font;
+    protected TrueTypeFont font20, font;
 
     public StateBasedGame game;
 
@@ -31,8 +31,7 @@ public class Game extends BasicGameState { // BasicGame
     public Game() {
         try {
             tileset = new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset1.png").getFile()), 50, 50);
-            InputStream inputStream = ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf");
-            font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(18f), true);
+            font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(18f), true);
         } catch (SlickException e) {
             e.printStackTrace();
         } catch (FontFormatException e) {

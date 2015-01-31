@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="65" height="10" tilewidth="50" tileheight="50">
+<map version="1.0" orientation="orthogonal" width="65" height="14" tilewidth="50" tileheight="50">
  <tileset firstgid="1" name="1" tilewidth="50" tileheight="50">
   <image source="tileset1.png" width="300" height="300"/>
  </tileset>
- <layer name="Tile Layer 1" width="65" height="10">
+ <layer name="Tile Layer 1" width="65" height="14">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlAJhIBbBwiZWDyVqaKF3MAJC/iHXv0wUmEWKnbSID3xmMjFg9xsHkhw2eUrtHQqAY6AdgAUwEYGp6W56hAE10ho2M6kF6BUG9DITW1jTM02BADcUIwN6hgEtzMIWbshy+NThS//EqCHVXeTmM0JuBwB1jALP
+   eJxjYBgFo2AUUAMIA7EIFjaxeihRQwu9gxEQ8g+5/mWiwCxS7KRFfOAzk4kBu984kOSwyVNq71AAHAPtACyAiQhMTXfTIwyokdawmUktQK8woJeZ2MKanmkKBLjRaAYa2EFtMwmZhS3ckOXwqcOX/olRQ6q7yM1ng7FMpDcgNf5GIgAALToC1w==
   </data>
  </layer>
- <layer name="active" width="65" height="10">
+ <layer name="active" width="65" height="14">
   <data encoding="base64" compression="zlib">
-   eJxjYBgZgHegHUAAsNPBDvQwkKaDnQMBQP6SwiE3WNMBPeJ/sAFRLGLMSPRwCBNc6RAGsIXBSAPUCAMWJIwOhkI5N5jTAS3Dj5mwEoKAUB4jFgggmQfDowACAHzRAb4=
+   eJxjYBgFo2DkAN6BdgABwE4HO9DDQJoOdg4EAPlLCofcYE0H9Ij/wQZEsYgxI9HDIUxwpUMYwBYGIw1QIwxYkDA6GK7lHL0ArcKPkQGR3ykBhPLYKCAeCEBpKSQ8CkYBDAAAS2oBqg==
   </data>
  </layer>
 </map>

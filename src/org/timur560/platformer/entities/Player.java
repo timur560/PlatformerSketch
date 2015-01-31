@@ -2,6 +2,7 @@ package org.timur560.platformer.entities;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.ResourceLoader;
@@ -9,6 +10,7 @@ import org.newdawn.slick.util.ResourceLoader;
 import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.Active;
 import org.timur560.platformer.core.GameObject;
+import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.entities.weapon.Weapon;
 import org.timur560.platformer.main.Splash;
@@ -16,6 +18,8 @@ import org.timur560.platformer.world.Level;
 import org.timur560.platformer.main.Game;
 import org.timur560.platformer.world.MovingBlock;
 import org.timur560.platformer.world.MovingPlatform;
+
+import java.util.List;
 
 public class Player extends GameObject implements Active {
     protected float gravity       = 0.7f;
@@ -30,10 +34,18 @@ public class Player extends GameObject implements Active {
         health                  = 10;
     protected boolean dead        = false;
     protected long prevDecreaseHealh = 0,
-        decreaseHealthDelay = 1000;
+        decreaseHealthDelay = 1000,
+        prevTeleport = 0,
+        teleportDelay = 400;
 
     private Animation moveLeft, moveRight, stayLeft, stayRight, jumpRight, jumpLeft, moveLadder, stayLadder, current;
     private Weapon weapon;
+
+    // teleportation vars
+    private boolean animateTeleport;
+    private float[] teleportFrom;
+    private float[] teleportTo;
+    private float t = 0, teleportSpeed = 0.4f;
 
     public Player(Game g) throws SlickException {
         super(g);
@@ -59,18 +71,20 @@ public class Player extends GameObject implements Active {
         current = stayRight;
     }
 
-    public void setWeapon(Weapon w) throws SlickException {
-        weapon = w;
-        w.init();
-    }
-
-    public void die() {
-        dead = true;
-        health = 10;
-        game.game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
-    }
-
     public void update(GameContainer gc, int delta) throws SlickException {
+        if (animateTeleport) {
+            t += teleportSpeed / delta;
+
+            shape.setX((1 - t) * teleportFrom[0] + t * teleportTo[0]);
+            shape.setY((1 - t) * teleportFrom[1] + t * teleportTo[1]);
+
+            if (t > 1) {
+                t = 0;
+                animateTeleport = false;
+            }
+            else return;
+        }
+
         Level level = game.getLevel();
 
         if (dead) {
@@ -199,6 +213,36 @@ public class Player extends GameObject implements Active {
             }
         }
 
+        // teleport
+        if (gc.getInput().isKeyDown(Input.KEY_C)
+                && (prevTeleport == 0 || System.currentTimeMillis() > prevTeleport + teleportDelay)) {
+            for (Portal p : game.getLevel().getPortals()) {
+                if (p.getPortalShape().intersects(shape)) {
+                    if (p.getDest().get(0) == game.getLevel().getId()) { // if current level portal
+                        if (p.getDest().get(1) == game.getLevel().getZone()) { // if current zone portal
+                            float[] pos = game.getLevel().getPortals().get(p.getDest().get(2).intValue()).getPos();
+                            teleport(shape.getX(), shape.getY(), pos[0] + 10, pos[1]);
+                            break;
+                        } else { // go to another zone in current level
+                            game.getLevel().loadZone(
+                                    p.getDest().get(1).intValue(), // zone
+                                    p.getDest().get(2).intValue()); // portal
+                        }
+                    } else { // load another level
+
+                        System.out.println(p.getDest().get(0) + "  " + ((Platformer) game.game).getCurrentLevel());
+
+                        ((Platformer) game.game).setCurrentLevel(p.getDest().get(0).intValue());
+
+                        System.out.println(p.getDest().get(0) + "  " + ((Platformer) game.game).getCurrentLevel());
+
+                        game.game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                    }
+                }
+            }
+            prevTeleport = System.currentTimeMillis();
+        }
+
         // enemies collision
         if (level.collidesWithEnemie(shape)) {
             decreaseHealth();
@@ -226,6 +270,31 @@ public class Player extends GameObject implements Active {
         weapon.render(gc, g);
     }
 
+    public void setWeapon(Weapon w) throws SlickException {
+        weapon = w;
+        w.init();
+    }
+
+    private void teleport(float x1, float y1, float x2, float y2) {
+        teleportFrom = new float[]{x1, y1};
+        teleportTo = new float[]{x2, y2};
+        animateTeleport = true;
+    }
+
+    public void decreaseHealth() {
+        if (prevDecreaseHealh == 0 || System.currentTimeMillis() > prevDecreaseHealh + decreaseHealthDelay) {
+            health--;
+            if (health <= 0) die();
+            prevDecreaseHealh = System.currentTimeMillis();
+        }
+    }
+
+    public void die() {
+        dead = true;
+        health = 10;
+        game.game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+    }
+
     public float getX() {
         return shape.getX();
     }
@@ -236,14 +305,6 @@ public class Player extends GameObject implements Active {
 
     public int getDirection() {
         return direction;
-    }
-
-    public void decreaseHealth() {
-        if (prevDecreaseHealh == 0 || System.currentTimeMillis() > prevDecreaseHealh + decreaseHealthDelay) {
-            health--;
-            if (health <= 0) die();
-            prevDecreaseHealh = System.currentTimeMillis();
-        }
     }
 
     public int getHealth() {

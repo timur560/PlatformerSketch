@@ -68,7 +68,7 @@ public abstract class Enemy extends GameObject implements Active {
         if (Platformer.DEBUG_MODE) g.draw(shape);
         if (type.equals("snowman")) {
             g.drawImage(getSprite(), shape.getX() - 10, shape.getY());
-        } else {
+        } else if (getSprite() != null) {
             g.drawImage(getSprite(), shape.getX(), shape.getY());
         }
         if (weapon != null) weapon.render(gc, g);
