@@ -31,6 +31,7 @@ public class Level {
     // zone vars
     protected List<Shape> platforms;
     protected List<MovingPlatform> movingPlatforms;
+    protected List<MovingBlock> movingBlocks;
     protected List<Ladder> ladders;
     protected List<Enemy> enemies;
     protected List<Portal> portals;
@@ -194,6 +195,13 @@ public class Level {
         for (Map mp : ((List<Map>) params.get("movingPlatforms"))) {
             movingPlatforms.add(new MovingPlatform(game, (List<List<Long>>) mp.get("path"), (Long) mp.get("width"), (Double) mp.get("speed")));
         }
+
+        // moving platforms
+        movingBlocks = new ArrayList<>();
+
+        for (List mb : ((List<List>) params.get("movingBlocks"))) {
+            movingBlocks.add(new MovingBlock(game, (Long) mb.get(0), (Long) mb.get(1)));
+        }
     }
 
     public void init() throws SlickException {
@@ -214,6 +222,7 @@ public class Level {
         for (Portal e : portals) e.update(gc, delta);
         for (Heart h : hearts) h.update(gc, delta);
         for (MovingPlatform mp: movingPlatforms) mp.update(gc, delta);
+        for (MovingBlock mb: movingBlocks) mb.update(gc, delta);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -242,6 +251,7 @@ public class Level {
         for (Heart h : hearts) h.render(gc, g);
         for (Hint h : hints) h.render(gc, g);
         for (MovingPlatform mp: movingPlatforms) mp.render(gc, g);
+        for (MovingBlock mb: movingBlocks) mb.render(gc, g);
 
         if (effect.equals("snow")) {
             Helper.renderSnow(g, offset);
@@ -269,6 +279,15 @@ public class Level {
 
         return null;
     }
+
+    public MovingBlock collidesWithMovingBlock(Shape s) {
+        for (MovingBlock mb : movingBlocks) {
+            if (mb.getShape().intersects(s)) return mb;
+        }
+
+        return null;
+    }
+
 
     public boolean collidesWithLadder(Shape s) {
         for (Ladder l : ladders) {

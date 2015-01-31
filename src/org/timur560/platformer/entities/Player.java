@@ -14,6 +14,7 @@ import org.timur560.platformer.entities.weapon.Weapon;
 import org.timur560.platformer.main.Splash;
 import org.timur560.platformer.world.Level;
 import org.timur560.platformer.main.Game;
+import org.timur560.platformer.world.MovingBlock;
 import org.timur560.platformer.world.MovingPlatform;
 
 public class Player extends GameObject implements Active {
@@ -110,11 +111,15 @@ public class Player extends GameObject implements Active {
             shape.setY(shape.getY() + vYtemp);
 
             MovingPlatform mp = level.collidesWighMovingPlatform(shape);
+            MovingBlock mb = level.collidesWithMovingBlock(shape);
 
             if (level.collidesWith(shape)
                     || mp != null
+                    || mb != null
                     || level.collidesWithLadder(shape)) {
+
                 shape.setY(shape.getY() - vYtemp);
+
                 if (mp != null) {
                     if (shape.getY() < mp.getShape().getY()) shape.setY(mp.getShape().getY() - shape.getHeight());
                     else shape.setY(mp.getShape().getY() + mp.getShape().getHeight() + 2);
@@ -129,8 +134,11 @@ public class Player extends GameObject implements Active {
         if (gc.getInput().isKeyDown(Input.KEY_Z)) { // jump
             shape.setY(shape.getY() + 0.5f);
 
+            MovingBlock mb = level.collidesWithMovingBlock(shape);
+
             if (level.collidesWith(shape)
                     || level.collidesWithLadder(shape)
+                    || mb != null
                     || level.collidesWighMovingPlatform(shape) != null) {
                 vY = jumpStrength;
             }
