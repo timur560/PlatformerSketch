@@ -1,0 +1,114 @@
+{
+  "width": 38,
+  "height" : 25,
+  "effect" : "snow",
+  "portals": [
+    {
+      "pos": [0, 23],
+      "dest": [0, 0, 0]
+    },
+    {
+      "pos": [2, 5],
+      "dest": [0, 0, 2]
+    },
+    {
+      "pos": [4, 5],
+      "dest": [1, 0, 0],
+      "wall": [10, 7, 3],
+      "terminal": [9, 13]
+    }
+  ],
+  "ladders" : [
+    [27, 20, 4],
+    [35, 10, 4],
+    [15, 10, 4],
+    [5,6,4]
+  ],
+  "enemies" : [
+    {
+      "rect" : [1.0, 1.0, 0.0, 0.0],
+      "path" : [[6, 22], [11, 22]],
+      "speed" : 0.2,
+      "canDie" : false,
+      "weapon" : false,
+      "type" : "snowflake",
+      "direction" : 4
+    },
+    {
+      "rect" : [0.6, 1.0, 0.0, 0.0],
+      "path" : [[19, 22], [23, 22]],
+      "speed" : 0.1,
+      "canDie" : true,
+      "weapon" : true,
+      "type" : "snowman",
+      "shootDelay" : 2000,
+      "direction" : 4
+    }
+  ],
+  "shapes" : [
+    [0, 25, 5, 25],
+    [7, 25, 9, 25],
+    [12, 25, 19, 25],
+    [19, 23, 23, 23],
+    [24, 25, 28, 25],
+    [25, 21, 27, 21],
+    [28, 21, 38, 21],
+    [35, 19, 37, 19],
+    [36, 17, 37, 17],
+    [35, 15, 36, 15],
+    [23, 11, 35, 11],
+    [17, 11, 21, 11],
+    [2, 11, 15, 11],
+    [8, 15, 17, 15],
+    [5,16,7,16],
+    [0,18,5,18],
+    [0,7,5,7],
+    [6,7,11,7]
+  ],
+  "movingPlatforms" : [
+    {
+      "path" : [[2,23], [5,21], [5,19], [5,21]],
+      "width" : 2,
+      "speed" : 0.1
+    }
+  ],
+  "hints" : [
+    {
+      "pos" : [0, 23],
+      "text" : "Find your love! Collect all the hearts!"
+    },
+    {
+      "pos" : [2, 23],
+      "text" : "Press 'C' to open boxes or dig the snow heaps"
+    },
+    {
+      "pos" : [4, 23],
+      "text" : "Press 'Z' for jump"
+    },
+    {
+      "pos" : [7, 23],
+      "text" : "Snowflake are dangerous! Be careful"
+    },
+    {
+      "pos" : [4, 5],
+      "text" : "This is portal. Press 'C' for teleportation"
+    },
+    {
+      "pos" : [9, 13],
+      "text" : "This is terminal. Press 'C' to activate"
+    }
+
+  ],
+  "hearts" : [
+    {
+      "pos" : [2, 23],
+      "secret" : "box",
+      "fake" : true
+    },
+    {
+      "pos" : [4, 23],
+      "secret" : "snow",
+      "fake" : false
+    }
+  ]
+}

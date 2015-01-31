@@ -72,7 +72,7 @@ public class Gun extends Weapon implements Shootable {
         } else {
             for (Bullet b : bullets) {
                 if (b.getShape().intersects(game.getPlayer().getShape())) {
-                    game.getPlayer().die();
+                    game.getPlayer().decreaseHealth();
                     b.die();
                     break;
                 }

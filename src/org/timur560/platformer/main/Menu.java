@@ -69,7 +69,8 @@ public class Menu extends BasicGameState {
             case Input.KEY_ENTER:
                 switch (currentItemId) {
                     case 0:
-                        game.enterState(org.timur560.platformer.main.Game.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                        // game.enterState(org.timur560.platformer.main.Game.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                        game.enterState(org.timur560.platformer.main.Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
                         break;
                     case 1:
                         System.exit(0);

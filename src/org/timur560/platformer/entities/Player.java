@@ -2,7 +2,8 @@ package org.timur560.platformer.entities;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.ResourceLoader;
 
 import org.timur560.platformer.Platformer;
@@ -10,11 +11,10 @@ import org.timur560.platformer.core.Active;
 import org.timur560.platformer.core.GameObject;
 import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.entities.weapon.Weapon;
+import org.timur560.platformer.main.Splash;
 import org.timur560.platformer.world.Level;
 import org.timur560.platformer.main.Game;
 import org.timur560.platformer.world.MovingPlatform;
-
-import java.net.URISyntaxException;
 
 public class Player extends GameObject implements Active {
     protected float gravity       = 0.7f;
@@ -24,11 +24,12 @@ public class Player extends GameObject implements Active {
     protected float inertion      = 0.9f;
     protected float vX            = 0;
     protected float vY            = 0;
-    protected int interations     = 5;
-    protected int direction       = RIGHT;
-    protected int jumpDelay       = 500;
-    protected long prevJumpTime   = 0;
+    protected int iterations    = 5,
+        direction               = RIGHT,
+        health                  = 10;
     protected boolean dead        = false;
+    protected long prevDecreaseHealh = 0,
+        decreaseHealthDelay = 1000;
 
     private Animation moveLeft, moveRight, stayLeft, stayRight, jumpRight, jumpLeft, moveLadder, stayLadder, current;
     private Weapon weapon;
@@ -64,6 +65,8 @@ public class Player extends GameObject implements Active {
 
     public void die() {
         dead = true;
+        health = 10;
+        game.game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
@@ -74,13 +77,6 @@ public class Player extends GameObject implements Active {
             shape.setY(level.getEntryPoint()[1]);
             dead = false;
             return;
-        }
-
-        // moving platform collision
-        for (MovingPlatform mp : game.getLevel().getMovingPlatforms()) {
-            if (shape.intersects(mp.getShape())) {
-                shape.setY(mp.getShape().getY() - shape.getHeight());
-            }
         }
 
         // ladder collision
@@ -107,13 +103,36 @@ public class Player extends GameObject implements Active {
             current = stayLadder;
         }
 
+        // Y Movement-Collisions
+        float vYtemp = vY / iterations;
+
+        for (int i = 0; i < iterations; i++) {
+            shape.setY(shape.getY() + vYtemp);
+
+            MovingPlatform mp = level.collidesWighMovingPlatform(shape);
+
+            if (level.collidesWith(shape)
+                    || mp != null
+                    || level.collidesWithLadder(shape)) {
+                shape.setY(shape.getY() - vYtemp);
+                if (mp != null) {
+                    if (shape.getY() < mp.getShape().getY()) shape.setY(mp.getShape().getY() - shape.getHeight());
+                    else shape.setY(mp.getShape().getY() + mp.getShape().getHeight() + 2);
+                }
+                vY = 0;
+                break;
+            }
+        }
+
         // Y acceleration
         vY += gravity;
         if (gc.getInput().isKeyDown(Input.KEY_Z)) { // jump
             shape.setY(shape.getY() + 0.5f);
-            if ((level.collidesWith(shape) || level.collidesWithLadder(shape)) && System.currentTimeMillis() > jumpDelay + prevJumpTime) {
+
+            if (level.collidesWith(shape)
+                    || level.collidesWithLadder(shape)
+                    || level.collidesWighMovingPlatform(shape) != null) {
                 vY = jumpStrength;
-                prevJumpTime = System.currentTimeMillis();
             }
 
             if (level.collidesWithLadder(shape)) {
@@ -123,28 +142,16 @@ public class Player extends GameObject implements Active {
             shape.setY(shape.getY() - 0.5f);
         }
 
-        // Y Movement-Collisions
-        float vYtemp = vY/interations;
-
-        for (int i = 0; i < interations; i++) {
-            shape.setY(shape.getY() + vYtemp);
-
-            if (level.collidesWith(shape) || (level.collidesWithLadder(shape) && vYtemp > 0)) {
-                shape.setY(shape.getY() - vYtemp);
-                vY = 0;
-            }
-        }
-
         // X acceleration
         if (gc.getInput().isKeyDown(Input.KEY_LEFT)) {
             direction = LEFT;
-            current = (vY == 0) ? moveLeft : jumpLeft;
+            current = ((int) vY == 0) ? moveLeft : jumpLeft;
             if (currentSpeed >= -speed) {
                 currentSpeed -= inertion;
             }
         } else if (gc.getInput().isKeyDown(Input.KEY_RIGHT)) {
             direction = RIGHT;
-            current = (vY == 0) ? moveRight : jumpRight;
+            current = ((int) vY == 0) ? moveRight : jumpRight;
             if (currentSpeed <= speed) {
                 currentSpeed += inertion;
             }
@@ -166,18 +173,28 @@ public class Player extends GameObject implements Active {
         vX = currentSpeed;
 
         // X Movement-Collisions
-        float vXtemp = vX/interations;
-        for (int i = 0; i < interations; i++) {
+        float vXtemp = vX/ iterations;
+
+        for (int i = 0; i < iterations; i++) {
             shape.setX( shape.getX() + vXtemp );
+
+            MovingPlatform mp = level.collidesWighMovingPlatform(shape);
+
             if (level.collidesWith(shape)) {
                 shape.setX( shape.getX() - vXtemp );
                 vX = 0;
+            } else if (mp != null) {
+                if (shape.getY() + shape.getHeight() > mp.getShape().getY()) {
+                    shape.setX( shape.getX() - vXtemp );
+                    vX = 0;
+                }
             }
         }
 
         // enemies collision
         if (level.collidesWithEnemie(shape)) {
-            die();
+            decreaseHealth();
+            vY = jumpStrength;
         }
 
         // die if dropped in gap
@@ -213,4 +230,15 @@ public class Player extends GameObject implements Active {
         return direction;
     }
 
+    public void decreaseHealth() {
+        if (prevDecreaseHealh == 0 || System.currentTimeMillis() > prevDecreaseHealh + decreaseHealthDelay) {
+            health--;
+            if (health <= 0) die();
+            prevDecreaseHealh = System.currentTimeMillis();
+        }
+    }
+
+    public int getHealth() {
+        return health;
+    }
 }

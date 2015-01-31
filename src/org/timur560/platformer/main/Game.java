@@ -24,7 +24,7 @@ public class Game extends BasicGameState { // BasicGame
     protected SpriteSheet tileset;
     protected TrueTypeFont font;
 
-    StateBasedGame game;
+    public StateBasedGame game;
 
     public static int ID = 1;
 
@@ -76,7 +76,7 @@ public class Game extends BasicGameState { // BasicGame
     public void init(GameContainer gc, StateBasedGame stateBasedGame) throws SlickException {
         game = stateBasedGame;
 
-        level = new Level(this, 1);
+        level = new Level(this, ((Platformer) game).getCurrentLevel());
         player = new Player(this);
 
         level.init();
@@ -122,5 +122,10 @@ public class Game extends BasicGameState { // BasicGame
 
     public TrueTypeFont getFont() {
         return font;
+    }
+
+    public void goToLevel(int level) {
+        ((Platformer) game).setCurrentLevel(level);
+        game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
     }
 }

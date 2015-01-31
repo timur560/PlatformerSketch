@@ -1,6 +1,6 @@
 {
-  "width": 1900,
-  "height" : 1250,
+  "width": 38,
+  "height" : 25,
   "effect" : "snow",
   "portals": [
     {
@@ -67,7 +67,7 @@
   ],
   "movingPlatforms" : [
     {
-      "path" : [[2,24], [2,20]],
+      "path" : [[2,23], [5,21], [5,19], [5,21]],
       "width" : 2,
       "speed" : 0.1
     }

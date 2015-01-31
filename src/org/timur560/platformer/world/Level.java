@@ -36,7 +36,7 @@ public class Level {
     protected List<Portal> portals;
     protected List<Heart> hearts;
     protected List<Hint> hints;
-    protected float width = 2000, height = 900;
+    protected float width, height;
     protected Image bg, zoneImage; // tmp
     protected String effect;
 
@@ -99,8 +99,8 @@ public class Level {
             e.printStackTrace();
         }
 
-        width = ((Long) params.get("width")).floatValue();
-        height = ((Long) params.get("height")).floatValue();
+        width = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[0];
+        height = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[1];
         effect = (String) params.get("effect");
 
         // platforms
@@ -198,7 +198,7 @@ public class Level {
 
     public void init() throws SlickException {
         for (Enemy e : enemies) e.init();
-        for (Portal e : portals) e.init();
+        for (Portal p : portals) p.init();
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
@@ -259,11 +259,15 @@ public class Level {
             if (p.intersects(s)) return true;
         }
 
+        return false;
+    }
+
+    public MovingPlatform collidesWighMovingPlatform (Shape s) {
         for (MovingPlatform mp : movingPlatforms) {
-            if (mp.getShape().intersects(s)) return true;
+            if (mp.getShape().intersects(s)) return mp;
         }
 
-        return false;
+        return null;
     }
 
     public boolean collidesWithLadder(Shape s) {

@@ -33,10 +33,17 @@ public class StatusBar extends GameObject {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         float[] offset = game.getOffset();
 
+        // hearts
         g.drawImage(game.getTileset().getSubImage(0, 4), Helper.offsetValues(10, 10, offset)[0], Helper.offsetValues(10, 10, offset)[1]);
-
         g.setColor(Color.white);
-        // game.getFont().drawString(heartsCollected + "/" + heartsTotal, Helper.offsetValues(30, 10, offset)[0], Helper.offsetValues(30, 10, offset)[1]);
         game.getFont().drawString(Helper.offsetValues(40, 8, offset)[0], Helper.offsetValues(40, 8, offset)[1], heartsCollected + "/" + heartsTotal);
+
+        // health
+        g.drawImage(game.getTileset().getSubImage(3, 3),
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[0],
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[1]);
+        game.getFont().drawString(
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 25, 8, offset)[0],
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 25, 8, offset)[1], game.getPlayer().getHealth() + "");
     }
 }
