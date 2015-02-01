@@ -226,7 +226,7 @@ public class Player extends GameObject implements Active {
                             teleport(shape.getX(), shape.getY(), pos[0] + 10, pos[1]);
                             break;
                         } else { // go to another zone in current level
-                            System.out.println("Load zone #" + p.getDest().get(1).intValue());
+                            System.out.println("Load zone #" + p.getDest().get(1) + " (portal #" + p.getDest().get(2) + ")");
                             level.loadZone(
                                     p.getDest().get(1).intValue(), // zone
                                     p.getDest().get(2).intValue()); // portal

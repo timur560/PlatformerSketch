@@ -23,8 +23,7 @@ public class Level {
     protected Game game;
 
     // common level vars
-    protected int id;
-    protected int zone;
+    protected int id, zone, heartsTotal = 0, heartsCollected = 0;
     protected long time, startTime;
     protected String title, description;
 
@@ -68,6 +67,8 @@ public class Level {
 
         title = (String) params.get("title");
         description = (String) params.get("description");
+
+        heartsTotal = ((Long) params.get("heartsTotal")).intValue();
 
         startTime = System.currentTimeMillis();
         time = ((Long) params.get("time")).longValue() * 60 * 60 * 1000;
@@ -169,12 +170,11 @@ public class Level {
         // portals
         portals = new ArrayList<>();
 
+        int i = 0;
+
         for (Map p : ((List<Map>) params.get("portals"))) {
             if (((List<Long>) p.get("dest")).get(0) == id) {
-                if (((List<Long>) p.get("dest")).get(0) == id
-                        && ((List<Long>) p.get("dest")).get(1) == zone
-                        && ((List<Long>) p.get("dest")).get(2) == portal)
-                    {
+                if (i == portal) {
                     entryPoint = Helper.cellsToPx(((List<Long>) p.get("pos")).get(0), ((List<Long>) p.get("pos")).get(1));
                 }
 
@@ -183,6 +183,7 @@ public class Level {
                 portals.add(new Portal(game, (List<Long>) p.get("pos"), (List<Long>) p.get("dest"), (List<Long>) p.get("wall"),
                         new ActionTerminal(game, (List<Long>) p.get("terminal"))));
             }
+            i++;
         }
 
         System.out.println("Entry point: " + entryPoint[0] + ":" + entryPoint[1]);
@@ -341,11 +342,11 @@ public class Level {
     }
 
     public long getHeartsTotal() {
-        return hearts.stream().filter(h -> !h.getFake()).count();
+        return heartsTotal;
     }
 
     public long getHeartsCollected() {
-        return hearts.stream().filter(h -> !h.getFake() && h.getCollected()).count();
+        return heartsCollected;
     }
 
     public List<MovingPlatform> getMovingPlatforms() {
@@ -369,5 +370,9 @@ public class Level {
         for (int i = 0; i < width; i += size) {
             g.drawLine(i, 0, i, height);
         }
+    }
+
+    public void addHeartCollected() {
+        heartsCollected++;
     }
 }

@@ -5,14 +5,23 @@
   "portals": [
     {
       "pos": [1,28],
-      "dest": [1, 1, 0]
+      "dest": [1, 0, 3]
+    },
+    {
+      "pos": [1,16],
+      "dest": [1, 0, 1]
     },
 
     {
-      "pos": [8, 5],
+      "pos": [11,12],
+      "dest": [1, 0, 2]
+    },
+
+    {
+      "pos": [13,1],
       "dest": [2, 0, 0],
-      "wall": [10, 7, 3],
-      "terminal": [9, 13]
+      "wall": [16,0,2],
+      "terminal": [12,20]
     }
   ],
   "ladders" : [
@@ -24,7 +33,7 @@
   "enemies" : [
     {
       "rect" : [1.0, 1.0, 0.0, 0.0],
-      "path" : [[6, 22], [11, 22]],
+      "path" : [[1,7], [1,10]],
       "speed" : 0.2,
       "canDie" : false,
       "weapon" : false,
@@ -32,13 +41,51 @@
       "direction" : 4
     },
     {
-      "rect" : [0.6, 1.0, 0.0, 0.0],
-      "path" : [[19, 22], [23, 22]],
+      "rect" : [1.0, 1.0, 0.0, 0.0],
+      "path" : [[3,7], [3,10]],
       "speed" : 0.1,
+      "canDie" : false,
+      "weapon" : false,
+      "type" : "snowflake",
+      "direction" : 4
+    },
+    {
+      "rect" : [1.0, 1.0, 0.0, 0.0],
+      "path" : [[13,17], [17,17]],
+      "speed" : 0.2,
+      "canDie" : false,
+      "weapon" : false,
+      "type" : "snowflake",
+      "direction" : 4
+    },
+
+    {
+      "rect" : [0.6, 1.0, 0.0, 0.0],
+      "path" : [[10, 25], [11, 25]],
+      "speed" : 0.2,
       "canDie" : true,
       "weapon" : true,
       "type" : "snowman",
-      "shootDelay" : 2000,
+      "shootDelay" : 1500,
+      "direction" : 4
+    },
+    {
+      "rect" : [0.6, 1.0, 0.0, 0.0],
+      "path" : [[8, 9], [10, 9]],
+      "speed" : 0.2,
+      "canDie" : true,
+      "weapon" : true,
+      "type" : "snowman",
+      "shootDelay" : 1500,
+      "direction" : 4
+    },
+
+    {
+      "rect" : [3.0, 0.5, 0.0, 0.5],
+      "path" : [[6,14]],
+      "canDie" : false,
+      "weapon" : false,
+      "type" : "none",
       "direction" : 4
     }
   ],
@@ -47,10 +94,10 @@
     [0,26,1,26],
     [5,26,8,26],
     [10,26,12,26],
-    [10,26,12,26],
-    [14,22,17,22],
+    [14,26,17,26],
     [6,22,7,22],
-    [8,22,9,22],
+    [8,20,11,20],
+    [1,22,4,22],
     [11,22,14,22],
     [17,23,20,23],
     [14,20,16,20],
@@ -58,7 +105,7 @@
     [6,16,9,16],
     [10,14,13,14],
     [0,11,6,11],
-    [8,11,10,11],
+    [8,10,11,10],
     [13,11,15,11],
     [16,11,20,11],
     [18,8,20,8],
@@ -67,7 +114,7 @@
   ],
   "movingPlatforms" : [
     {
-      "path" : [[9,14], [4,14], [4,17], [4,14]],
+      "path" : [[8,14], [4,14], [4,17], [4,14]],
       "width" : 1,
       "speed" : 0.1
     },
@@ -78,19 +125,71 @@
     }
   ],
   "movingBlocks" : [
-    [2, 21],
-    [4, 23]
+    [15,24],
+    [18,9]
   ],
   "hints" : [
   ],
   "hearts" : [
     {
-      "pos" : [2, 23],
+      "pos" : [0,24],
+      "secret" : "box",
+      "fake" : false
+    },
+    {
+      "pos" : [18,21],
+      "secret" : "box",
+      "fake" : false
+    },
+    {
+      "pos" : [19,21],
+      "secret" : "box",
+      "fake" : false
+    },
+    {
+      "pos" : [2,3],
+      "secret" : "box",
+      "fake" : false
+    },
+    {
+      "pos" : [3,3],
       "secret" : "box",
       "fake" : true
     },
     {
-      "pos" : [4, 23],
+      "pos" : [4,3],
+      "secret" : "box",
+      "fake" : true
+    },
+
+    {
+      "pos" : [1,20],
+      "secret" : "snowheap",
+      "fake" : false
+    },
+    {
+      "pos" : [2,20],
+      "secret" : "snowheap",
+      "fake" : true
+    },
+    {
+      "pos" : [3,20],
+      "secret" : "snowheap",
+      "fake" : false
+    },
+
+    {
+      "pos" : [0,9],
+      "secret" : "snowheap",
+      "fake" : true
+    },
+    {
+      "pos" : [2,9],
+      "secret" : "snowheap",
+      "fake" : false
+    },
+    {
+      "pos" : [4,9],
       "secret" : "snowheap",
       "fake" : false
     }
