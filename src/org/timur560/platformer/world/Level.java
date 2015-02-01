@@ -11,36 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.timur560.platformer.Platformer;
-import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.entities.*;
 import org.timur560.platformer.entities.enemies.*;
-import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.main.Game;
-import org.timur560.platformer.main.Hint;
 
 public class Level {
     protected Game game;
 
-    // common level vars
-    protected int id, zone, heartsTotal = 0, heartsCollected = 0;
+    protected int id, currentZone;
     protected long time, startTime;
     protected String title, description;
-
-    // zone vars
-    protected float[] entryPoint = new float[]{0.0f, 0.0f};
-    protected List<Shape> platforms;
-    protected List<MovingPlatform> movingPlatforms;
-    protected List<MovingBlock> movingBlocks;
-    protected List<Ladder> ladders;
-    protected List<Enemy> enemies;
-    protected List<Portal> portals;
-    protected List<Heart> hearts;
-    protected List<Hint> hints;
-    protected float width, height;
-    protected Image bg, zoneImage; // tmp
-    protected String effect;
-
+    protected List<Zone> zones;
 
     public Level(Game g, int id) {
         game = g;
@@ -67,229 +48,53 @@ public class Level {
 
         title = (String) params.get("title");
         description = (String) params.get("description");
-
-        heartsTotal = ((Long) params.get("heartsTotal")).intValue();
-
-        startTime = System.currentTimeMillis();
         time = ((Long) params.get("time")).longValue() * 60 * 60 * 1000;
 
-        loadZone(0);
-    }
+        startTime = System.currentTimeMillis();
 
-    public void loadZone(int z) {
-        loadZone(z, 0);
-    }
+        zones = new ArrayList<>();
 
-    public void loadZone(int z, int portal) {
-        zone = z;
+        int i;
+        for (i = 0; i < (Long) params.get("zones"); i++) zones.add(new Zone(game, this, i));
 
-        if (ResourceLoader.getResource("res/levels/" + id + "/" + zone + ".json") == null) {
-            System.out.println("No resources for such zone " + id + "/" + zone);
-            System.exit(0);
-        }
-
-        JSONReader jsonReader = new JSONReader();
-
-        Object result = null;
-
-        try {
-            String jsonString = String.join("",
-                    Files.readAllLines(Paths.get(ResourceLoader.getResource("res/levels/" + id + "/" + zone + ".json").toURI())));
-            result = jsonReader.read(jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Map params = (Map) result;
-
-        // TODO >>
-        try {
-            bg = new Image(ResourceLoader.getResource("res/images/" + id + "/" + zone + "/bg.png").getFile());
-            zoneImage = new Image(ResourceLoader.getResource("res/images/" + id + "/" + zone + "/cover.png").getFile());
-        } catch (SlickException e) {
-            e.printStackTrace();
-        }
-        // <<
-
-        width = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[0];
-        height = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[1];
-        effect = (String) params.get("effect");
-
-        // platforms
-        platforms = new ArrayList<Shape>();
-
-        for (List<Long> vertices : (List<List<Long>>) params.get("shapes")) {
-            platforms.add(Helper.cellsToPolygon(vertices.get(0), vertices.get(1), vertices.get(2), vertices.get(3)));
-
-        }
-
-        // ladders
-        ladders = new ArrayList<Ladder>();
-
-        for (List<Long> vertices : (List<List<Long>>) params.get("ladders")) {
-            ladders.add(new Ladder(game, vertices.get(0), vertices.get(1), vertices.get(2)));
-        }
-
-        // enemies
-        enemies = new ArrayList<Enemy>();
-
-        for (Map e : ((List<Map>) params.get("enemies"))) {
-            if (((List)e.get("path")).size() == 1) { // static
-
-                Enemy enemy = new StaticEnemy(
-                        game,
-                        ((List<List<Long>>) e.get("path")).get(0),
-                        (List<Double>) e.get("rect"),
-                        (String)    e.get("type"), // etc. "snowman"
-                        (boolean)   e.get("canDie"),
-                        ((Long)     e.get("direction")).intValue()
-                );
-
-                if ((boolean) e.get("weapon")) {
-                    enemy.setWeapon(new Gun(game, enemy), ((Long) e.get("shootDelay")).intValue());
-                }
-                enemies.add(enemy);
-            } else  { // moving ( > 1)
-                Enemy enemy = new MovingEnemy(
-                        game,
-                        (String) e.get("type"), // etc. "snowman"
-                        (boolean) e.get("canDie"),
-                        (List<List<Long>>) e.get("path"),
-                        (List<Double>) e.get("rect"),
-                        (Double) e.get("speed")
-                );
-
-                if ((boolean) e.get("weapon")) {
-                    enemy.setWeapon(new Gun(game, enemy), ((Long) e.get("shootDelay")).intValue());
-                }
-
-                enemies.add(enemy);
-            }
-        }
-
-        // portals
-        portals = new ArrayList<>();
-
-        int i = 0;
-
-        for (Map p : ((List<Map>) params.get("portals"))) {
-            if (((List<Long>) p.get("dest")).get(0) == id) {
-                if (i == portal) {
-                    entryPoint = Helper.cellsToPx(((List<Long>) p.get("pos")).get(0), ((List<Long>) p.get("pos")).get(1));
-                }
-
-                portals.add(new Portal(game, (List<Long>) p.get("pos"), (List<Long>) p.get("dest")));
-            } else {
-                portals.add(new Portal(game, (List<Long>) p.get("pos"), (List<Long>) p.get("dest"), (List<Long>) p.get("wall"),
-                        new ActionTerminal(game, (List<Long>) p.get("terminal"))));
-            }
-            i++;
-        }
-
-        System.out.println("Entry point: " + entryPoint[0] + ":" + entryPoint[1]);
-
-        // hearts
-        hearts = new ArrayList<>();
-
-        for (Map heart : ((List<Map>) params.get("hearts"))) {
-            hearts.add(new Heart(game, ((List<Long>) heart.get("pos")).get(0), ((List<Long>) heart.get("pos")).get(1),
-                    (String) heart.get("secret"), (Boolean) heart.get("fake")));
-
-        }
-
-        // hints
-        hints = new ArrayList<>();
-
-        for (Map hint : ((List<Map>) params.get("hints"))) {
-            hints.add(new Hint(game, ((List<Long>) hint.get("pos")).get(0), ((List<Long>) hint.get("pos")).get(1),
-                    (String) hint.get("text")));
-        }
-
-        // moving platforms
-        movingPlatforms = new ArrayList<>();
-
-        for (Map mp : ((List<Map>) params.get("movingPlatforms"))) {
-            movingPlatforms.add(new MovingPlatform(game, (List<List<Long>>) mp.get("path"), (Long) mp.get("width"), (Double) mp.get("speed")));
-        }
-
-        // moving platforms
-        movingBlocks = new ArrayList<>();
-
-        for (List mb : ((List<List>) params.get("movingBlocks"))) {
-            movingBlocks.add(new MovingBlock(game, (Long) mb.get(0), (Long) mb.get(1)));
-        }
     }
 
     public void init() throws SlickException {
-        for (Enemy e : enemies) e.init();
-        for (Portal p : portals) p.init();
+        for (Zone z : zones) z.init();
+        goToZone(0);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-        int i;
-
-        for (i = 0; i < enemies.size(); i++) {
-            if (enemies.get(i).isDead()) {
-                enemies.remove(i);
-            }
-        }
-
-        for (Enemy e : enemies) e.update(gc, delta);
-        for (Portal e : portals) e.update(gc, delta);
-        for (Heart h : hearts) h.update(gc, delta);
-        for (MovingPlatform mp: movingPlatforms) mp.update(gc, delta);
-        for (MovingBlock mb: movingBlocks) mb.update(gc, delta);
+        for (Zone z : zones) z.update(gc, delta);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        float[] offset = game.getOffset();
+        zones.get(currentZone).render(gc, g);
+    }
 
-        float bgX = offset[0] * ((width - bg.getWidth())) / (width - Platformer.WIDTH);
-        float bgY = offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
+    public void goToZone(int z) {
+        goToZone(z, 0);
+    }
 
-        // parallax background
-        g.drawImage(bg, bgX, bgY);
-
-        // level static objects image
-        g.drawImage(zoneImage, 0, 0);
-
-        if (Platformer.DEBUG_MODE) drawDebugLines(g, 50);
-
-        g.setColor(Color.green);
-
-        if (Platformer.DEBUG_MODE) for (Shape p : platforms) {
-            g.draw(p);
-        }
-
-        for (Ladder l : ladders) l.render(gc, g);
-        for (Enemy e : enemies) e.render(gc, g);
-        for (Portal e : portals) e.render(gc, g);
-        for (Heart h : hearts) h.render(gc, g);
-        for (Hint h : hints) h.render(gc, g);
-        for (MovingPlatform mp: movingPlatforms) mp.render(gc, g);
-        for (MovingBlock mb: movingBlocks) mb.render(gc, g);
-
-        if (effect.equals("snow")) {
-            Helper.renderSnow(g, offset);
-        }
+    public void goToZone(int z, int portal) {
+        currentZone = z;
+        Portal p = zones.get(z).getPortals().get(portal);
+        game.getPlayer().getShape().setX(p.getPos()[0]);
+        game.getPlayer().getShape().setY(p.getPos()[1]);
     }
 
     public boolean collidesWith (Shape s) {
-        if (s.getX() < 0 || s.getX() + s.getWidth() > width) return true;
+        Zone z = zones.get(currentZone);
 
-        for (Shape p : platforms) {
-            if (p.intersects(s)) return true;
-        }
-
-        for (Portal p : portals) {
-            if (p.intersects(s)) return true;
-        }
+        if (s.getX() < 0 || s.getX() + s.getWidth() > z.getWidth()) return true;
+        for (Shape p : z.getPlatforms()) if (p.intersects(s)) return true;
+        for (Portal p : z.getPortals()) if (p.intersects(s)) return true;
 
         return false;
     }
 
     public MovingPlatform collidesWighMovingPlatform (Shape s) {
-        for (MovingPlatform mp : movingPlatforms) {
+        for (MovingPlatform mp : zones.get(currentZone).getMovingPlatforms()) {
             if (mp.getShape().intersects(s)) return mp;
         }
 
@@ -297,16 +102,15 @@ public class Level {
     }
 
     public MovingBlock collidesWithMovingBlock(Shape s) {
-        for (MovingBlock mb : movingBlocks) {
+        for (MovingBlock mb : zones.get(currentZone).getMovingBlocks()) {
             if (mb.getShape().intersects(s)) return mb;
         }
 
         return null;
     }
 
-
     public boolean collidesWithLadder(Shape s) {
-        for (Ladder l : ladders) {
+        for (Ladder l : zones.get(currentZone).getLadders()) {
             if (l.getShape().intersects(s)) return true;
         }
 
@@ -314,65 +118,55 @@ public class Level {
     }
 
     public boolean collidesWithEnemie(Shape s) {
-        for (Enemy e : enemies) {
+        for (Enemy e : zones.get(currentZone).getEnemies()) {
             if (e.getShape().intersects(s)) return true;
         }
 
         return false;
     }
 
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    public List<Portal> getPortals() {
-        return portals;
-    }
-
-    public float[] getEntryPoint() {
-        return entryPoint;
-    }
-
-    public long getHeartsTotal() {
-        return heartsTotal;
-    }
-
-    public long getHeartsCollected() {
-        return heartsCollected;
-    }
-
-    public List<MovingPlatform> getMovingPlatforms() {
-        return movingPlatforms;
-    }
-
     public int getId() {
         return id;
     }
 
-    public int getZone() {
-        return zone;
+    public float getWidth() {
+        return zones.get(currentZone).getWidth();
     }
 
-    // Draw a grid on the screen for easy positioning
-    public void drawDebugLines(Graphics g, int size) {
-        g.setColor(Color.darkGray);
-        for (int i = 0; i < height; i += size) {
-            g.drawLine(0,i, width, i);
-        }
-        for (int i = 0; i < width; i += size) {
-            g.drawLine(i, 0, i, height);
-        }
+    public float getHeight() {
+        return zones.get(currentZone).getHeight();
     }
 
-    public void addHeartCollected() {
-        heartsCollected++;
+    public List<Enemy> getEnemies() {
+        return zones.get(currentZone).getEnemies();
     }
+
+    public List<Portal> getPortals() {
+        return zones.get(currentZone).getPortals();
+    }
+
+    public long getHeartsTotal() {
+        long heartsTotal = 0;
+
+        for (Zone z : zones) {
+            heartsTotal += z.getHearts().stream().filter(h -> !h.getFake()).count();
+        }
+
+        return heartsTotal;
+    }
+
+    public long getHeartsCollected() {
+        long heartsCollected = 0;
+
+        for (Zone z : zones) {
+            heartsCollected += z.getHearts().stream().filter(h -> !h.getFake() && h.getCollected()).count();
+        }
+
+        return heartsCollected;
+    }
+
+    public Zone getZone() {
+        return zones.get(currentZone);
+    }
+
 }

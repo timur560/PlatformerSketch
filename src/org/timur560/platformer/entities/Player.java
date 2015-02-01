@@ -49,7 +49,8 @@ public class Player extends GameObject implements Active {
 
     public Player(Game g) throws SlickException {
         super(g);
-        shape = new Rectangle(game.getLevel().getEntryPoint()[0], game.getLevel().getEntryPoint()[1], 30, 45);
+        float[] pos = game.getLevel().getZone().getPortals().get(0).getPos();
+        shape = new Rectangle(pos[0], pos[1], 30, 45);
         setWeapon(new Gun(game, this));
     }
 
@@ -86,13 +87,6 @@ public class Player extends GameObject implements Active {
         }
 
         Level level = game.getLevel();
-
-        if (dead) {
-            shape.setX(level.getEntryPoint()[0]);
-            shape.setY(level.getEntryPoint()[1]);
-            dead = false;
-            return;
-        }
 
         // ladder collision
         if (gc.getInput().isKeyDown(Input.KEY_UP)) {
@@ -218,30 +212,21 @@ public class Player extends GameObject implements Active {
                 && (prevTeleport == 0 || System.currentTimeMillis() > prevTeleport + teleportDelay)) {
             for (Portal p : game.getLevel().getPortals()) {
                 if (p.getPortalShape().intersects(shape)) {
-                    System.out.println("Teleport from : level #" + level.getId() + " zone #" + level.getZone());
                     if (p.getDest().get(0) == level.getId()) { // if current level portal
-                        if (p.getDest().get(1) == level.getZone()) { // if current zone portal
-                            System.out.println("Move to portal #" + p.getDest().get(2));
+                        if (p.getDest().get(1) == level.getZone().getId()) { // if current zone portal
                             float[] pos = level.getPortals().get(p.getDest().get(2).intValue()).getPos();
                             teleport(shape.getX(), shape.getY(), pos[0] + 10, pos[1]);
                             break;
                         } else { // go to another zone in current level
-                            System.out.println("Load zone #" + p.getDest().get(1) + " (portal #" + p.getDest().get(2) + ")");
-                            level.loadZone(
+                            level.goToZone(
                                     p.getDest().get(1).intValue(), // zone
                                     p.getDest().get(2).intValue()); // portal
-                            shape.setX(level.getEntryPoint()[0]);
-                            shape.setY(level.getEntryPoint()[1]);
+                            float[] pos = level.getZone().getPortals().get(p.getDest().get(2).intValue()).getPos();
+                            shape.setX(pos[0]);
+                            shape.setY(pos[1]);
                         }
                     } else { // load another level
-                        System.out.println("Load level #" + p.getDest().get(0).intValue());
-
-                        System.out.println(p.getDest().get(0) + "  " + ((Platformer) game.game).getCurrentLevel());
-
                         ((Platformer) game.game).setCurrentLevel(p.getDest().get(0).intValue());
-
-                        System.out.println(p.getDest().get(0) + "  " + ((Platformer) game.game).getCurrentLevel());
-
                         game.game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
                     }
                 }

@@ -17,7 +17,7 @@ import org.timur560.platformer.main.Game;
 public class MovingBlock extends GameObject {
     private float vY = 0, gravity = 0.7f;
     private int iterations = 5;
-    float[] initialPos;
+    private float[] initialPos;
 
     public MovingBlock(Game g, Long x, Long y) {
         super(g);
@@ -38,8 +38,9 @@ public class MovingBlock extends GameObject {
             shape.setY(shape.getY() + vYtemp);
 
             if (game.getLevel().collidesWith(shape)) {
-                vY = 0;
                 shape.setY(shape.getY() - vYtemp);
+                vY = 0;
+                break;
             }
         }
 

@@ -64,7 +64,6 @@ public class Heart extends GameObject {
             }
         } else {
             if (game.getPlayer().getShape().intersects(shape) && !collected) {
-                game.getLevel().addHeartCollected();
                 collected = true;
             }
         }
