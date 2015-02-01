@@ -218,17 +218,23 @@ public class Player extends GameObject implements Active {
                 && (prevTeleport == 0 || System.currentTimeMillis() > prevTeleport + teleportDelay)) {
             for (Portal p : game.getLevel().getPortals()) {
                 if (p.getPortalShape().intersects(shape)) {
-                    if (p.getDest().get(0) == game.getLevel().getId()) { // if current level portal
-                        if (p.getDest().get(1) == game.getLevel().getZone()) { // if current zone portal
-                            float[] pos = game.getLevel().getPortals().get(p.getDest().get(2).intValue()).getPos();
+                    System.out.println("Teleport from : level #" + level.getId() + " zone #" + level.getZone());
+                    if (p.getDest().get(0) == level.getId()) { // if current level portal
+                        if (p.getDest().get(1) == level.getZone()) { // if current zone portal
+                            System.out.println("Move to portal #" + p.getDest().get(2));
+                            float[] pos = level.getPortals().get(p.getDest().get(2).intValue()).getPos();
                             teleport(shape.getX(), shape.getY(), pos[0] + 10, pos[1]);
                             break;
                         } else { // go to another zone in current level
-                            game.getLevel().loadZone(
+                            System.out.println("Load zone #" + p.getDest().get(1).intValue());
+                            level.loadZone(
                                     p.getDest().get(1).intValue(), // zone
                                     p.getDest().get(2).intValue()); // portal
+                            shape.setX(level.getEntryPoint()[0]);
+                            shape.setY(level.getEntryPoint()[1]);
                         }
                     } else { // load another level
+                        System.out.println("Load level #" + p.getDest().get(0).intValue());
 
                         System.out.println(p.getDest().get(0) + "  " + ((Platformer) game.game).getCurrentLevel());
 
@@ -246,7 +252,6 @@ public class Player extends GameObject implements Active {
         // enemies collision
         if (level.collidesWithEnemie(shape)) {
             decreaseHealth();
-            vY = jumpStrength;
         }
 
         // die if dropped in gap
@@ -284,6 +289,7 @@ public class Player extends GameObject implements Active {
     public void decreaseHealth() {
         if (prevDecreaseHealh == 0 || System.currentTimeMillis() > prevDecreaseHealh + decreaseHealthDelay) {
             health--;
+            vY = -10; // jumpStrength;
             if (health <= 0) die();
             prevDecreaseHealh = System.currentTimeMillis();
         }
@@ -292,6 +298,7 @@ public class Player extends GameObject implements Active {
     public void die() {
         dead = true;
         health = 10;
+        System.out.println("You dead :(");
         game.game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
     }
 

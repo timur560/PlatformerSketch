@@ -171,7 +171,10 @@ public class Level {
 
         for (Map p : ((List<Map>) params.get("portals"))) {
             if (((List<Long>) p.get("dest")).get(0) == id) {
-                if (((List<Long>) p.get("dest")).get(0) == id && ((List<Long>) p.get("dest")).get(2) == portal) {
+                if (((List<Long>) p.get("dest")).get(0) == id
+                        && ((List<Long>) p.get("dest")).get(1) == zone
+                        && ((List<Long>) p.get("dest")).get(2) == portal)
+                    {
                     entryPoint = Helper.cellsToPx(((List<Long>) p.get("pos")).get(0), ((List<Long>) p.get("pos")).get(1));
                 }
 
@@ -181,6 +184,8 @@ public class Level {
                         new ActionTerminal(game, (List<Long>) p.get("terminal"))));
             }
         }
+
+        System.out.println("Entry point: " + entryPoint[0] + ":" + entryPoint[1]);
 
         // hearts
         hearts = new ArrayList<>();
@@ -358,9 +363,11 @@ public class Level {
     // Draw a grid on the screen for easy positioning
     public void drawDebugLines(Graphics g, int size) {
         g.setColor(Color.darkGray);
-        for (int i = 0; i < width; i += size) {
-            g.drawLine(i, 0, i, width);
+        for (int i = 0; i < height; i += size) {
             g.drawLine(0,i, width, i);
+        }
+        for (int i = 0; i < width; i += size) {
+            g.drawLine(i, 0, i, height);
         }
     }
 }
