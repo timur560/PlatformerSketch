@@ -117,6 +117,13 @@ public class Game extends BasicGameState { // BasicGame
             case Input.KEY_ESCAPE:
                 game.enterState(Menu.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
                 break;
+            case Input.KEY_F:
+                try {
+                    Platformer.app.setDisplayMode(Platformer.WIDTH, Platformer.HEIGHT, !Platformer.app.isFullscreen());
+                } catch (SlickException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 

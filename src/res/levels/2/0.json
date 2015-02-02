@@ -17,7 +17,7 @@
       "dest": [2, 0, 3]
     },
     {
-      "pos": [15,13],
+      "pos": [15,3],
       "dest": [2, 0, 2]
     },
     {
@@ -314,7 +314,7 @@
       "fake" : false
     },
     {
-      "pos" : [0,3],
+      "pos" : [0,2],
       "secret" : "snowheap",
       "fake" : false
     },

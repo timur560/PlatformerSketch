@@ -110,12 +110,12 @@ public class Level {
         return null;
     }
 
-    public boolean collidesWithLadder(Shape s) {
+    public Ladder collidesWithLadder(Shape s) {
         for (Ladder l : zones.get(currentZone).getLadders()) {
-            if (l.getShape().intersects(s)) return true;
+            if (l.getShape().intersects(s)) return l;
         }
 
-        return false;
+        return null;
     }
 
     public boolean collidesWithEnemie(Shape s) {

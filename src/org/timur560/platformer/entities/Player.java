@@ -14,6 +14,7 @@ import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.entities.weapon.Weapon;
 import org.timur560.platformer.main.Splash;
+import org.timur560.platformer.world.Ladder;
 import org.timur560.platformer.world.Level;
 import org.timur560.platformer.main.Game;
 import org.timur560.platformer.world.MovingBlock;
@@ -94,7 +95,7 @@ public class Player extends GameObject implements Active {
         if (gc.getInput().isKeyDown(Input.KEY_UP)) {
             direction = UP;
             current = moveLadder;
-            if (level.collidesWithLadder(shape)) {
+            if (level.collidesWithLadder(shape) != null) {
                 shape.setY(shape.getY() - speed);
             } else {
                 current = stayRight;
@@ -110,7 +111,7 @@ public class Player extends GameObject implements Active {
                 shape.setY(shape.getY() - speed);
                 current = stayRight;
             }
-        } else if (level.collidesWithLadder(shape)) {
+        } else if (level.collidesWithLadder(shape) != null) {
             current = stayLadder;
         }
 
@@ -126,7 +127,7 @@ public class Player extends GameObject implements Active {
             if (level.collidesWith(shape)
                     || mp != null
                     || mb != null
-                    || (level.collidesWithLadder(shape) && vY > 0)) {
+                    || (level.collidesWithLadder(shape) != null && vY > 0)) {
 
                 shape.setY(shape.getY() - vYtemp);
 
@@ -145,17 +146,20 @@ public class Player extends GameObject implements Active {
             shape.setY(shape.getY() + 0.5f);
 
             MovingBlock mb = level.collidesWithMovingBlock(shape);
+            Ladder l = level.collidesWithLadder(shape);
+
+            // if (l!= null) System.out.println(l.getShape().getY() + " " + (shape.getY() + shape.getHeight()));
 
             if (level.collidesWith(shape)
-                    // || level.collidesWithLadder(shape)
+                    || (l != null && l.getShape().getY() >= shape.getY() - 0.5f + shape.getHeight())
                     || mb != null
                     || level.collidesWighMovingPlatform(shape) != null) {
                 vY = jumpStrength;
             }
 
-            if (level.collidesWithLadder(shape)) {
-                current = stayLadder;
-            }
+//            if (l != null && l.getShape().getY() < shape.getY() + shape.getHeight()) {
+//                current = stayLadder;
+//            }
 
             shape.setY(shape.getY() - 0.5f);
         }
