@@ -10,7 +10,7 @@ import org.timur560.platformer.main.Game;
  */
 public abstract class Weapon extends GameObject {
     protected Active owner;
-    protected int delay = 300;
+    protected int delay = 200;
     protected long prevAct = 0;
 
     public Weapon(Game g, Active o) {

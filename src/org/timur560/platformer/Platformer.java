@@ -13,12 +13,12 @@ import org.timur560.platformer.main.Menu;
 import org.timur560.platformer.main.Splash;
 
 public class Platformer extends StateBasedGame {
-    public static boolean DEBUG_MODE = false;
+    public static boolean DEBUG_MODE = true;
     public static String NAME = "Blue-Eyed Girl";
     public static int WIDTH = 800;
     public static int HEIGHT = 600;
     public static float ZOOM = 1.0f;
-    private int currentLevel = 0;
+    private int currentLevel = 2;
 
     public Platformer() throws SlickException {
         super(NAME);

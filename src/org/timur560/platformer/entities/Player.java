@@ -126,7 +126,7 @@ public class Player extends GameObject implements Active {
             if (level.collidesWith(shape)
                     || mp != null
                     || mb != null
-                    || level.collidesWithLadder(shape)) {
+                    || (level.collidesWithLadder(shape) && vY > 0)) {
 
                 shape.setY(shape.getY() - vYtemp);
 
@@ -147,7 +147,7 @@ public class Player extends GameObject implements Active {
             MovingBlock mb = level.collidesWithMovingBlock(shape);
 
             if (level.collidesWith(shape)
-                    || level.collidesWithLadder(shape)
+                    // || level.collidesWithLadder(shape)
                     || mb != null
                     || level.collidesWighMovingPlatform(shape) != null) {
                 vY = jumpStrength;
