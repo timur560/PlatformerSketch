@@ -77,7 +77,7 @@ public class MovingPlatform extends GameObject {
 
         int i;
         for (i = 0; i < width; i++) {
-            g.drawImage(game.getTileset().getSubImage(2, 3), shape.getX() + Helper.CELL_SIZE * i, shape.getY() - 30);
+            g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(2, 3), shape.getX() + Helper.CELL_SIZE * i, shape.getY() - 30);
         }
     }
 

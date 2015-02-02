@@ -69,7 +69,7 @@ public class Portal extends GameObject {
                 if (Platformer.DEBUG_MODE) g.draw(wallShape);
                 int i;
                 for (i = 0; i < wallShape.getHeight(); i += 50) {
-                    g.drawImage(game.getTileset().getSubImage(0, 2), wallShape.getX() - 15, wallShape.getY() + i);
+                    g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(0, 2), wallShape.getX() - 15, wallShape.getY() + i);
                 }
             }
             terminal.render(gc, g);
@@ -77,7 +77,7 @@ public class Portal extends GameObject {
 
         g.setColor(Color.black);
         if (Platformer.DEBUG_MODE) g.draw(portalShape);
-        g.drawImage(game.getTileset().getSubImage(2, 4), portalShape.getX(), portalShape.getY());
+        g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(2, 4), portalShape.getX(), portalShape.getY());
     }
 
     public boolean intersects(Shape s) {

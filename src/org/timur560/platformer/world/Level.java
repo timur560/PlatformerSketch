@@ -48,8 +48,9 @@ public class Level {
 
         title = (String) params.get("title");
         description = (String) params.get("description");
-        time = ((Long) params.get("time")).longValue() * 60 * 60 * 1000;
 
+        // init time limit
+        time = ((Long) params.get("time")).longValue() * 60 * 1000;
         startTime = System.currentTimeMillis();
 
         zones = new ArrayList<>();
@@ -65,7 +66,7 @@ public class Level {
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-        for (Zone z : zones) z.update(gc, delta);
+        zones.get(currentZone).update(gc, delta);
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -169,4 +170,7 @@ public class Level {
         return zones.get(currentZone);
     }
 
+    public long getTimeLeft() {
+        return time - (System.currentTimeMillis() - startTime);
+    }
 }

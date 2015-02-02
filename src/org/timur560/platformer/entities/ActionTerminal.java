@@ -38,13 +38,13 @@ public class ActionTerminal extends GameObject {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (state == STATE_INACTIVE) {
             g.setColor(Color.black);
-            g.drawImage(game.getTileset().getSubImage(3, 2), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(3, 2), shape.getX(), shape.getY());
         } else if (state == STATE_OPENED) {
             g.setColor(Color.green);
-            g.drawImage(game.getTileset().getSubImage(1, 2), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(1, 2), shape.getX(), shape.getY());
         } else if (state == STATE_CLOSED) {
             g.setColor(Color.red);
-            g.drawImage(game.getTileset().getSubImage(2, 2), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(2, 2), shape.getX(), shape.getY());
         }
         if (Platformer.DEBUG_MODE) g.draw(shape);
     }

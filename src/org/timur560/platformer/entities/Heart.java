@@ -79,16 +79,16 @@ public class Heart extends GameObject {
             if (Platformer.DEBUG_MODE) g.draw(secretShape);
 
             if (secret.equals("box")) {
-                g.drawImage(game.getTileset().getSubImage(1, 4), secretShape.getX() - 10, secretShape.getY() - 10);
+                g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(1, 4), secretShape.getX() - 10, secretShape.getY() - 10);
             } else if (secret.equals("snowheap")) {
-                g.drawImage(game.getTileset().getSubImage(2, 0), secretShape.getX() - 10, secretShape.getY() - 30);
+                g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(2, 0), secretShape.getX() - 10, secretShape.getY() - 30);
             }
         }
 
         if (!fake && opened) {
             g.setColor(Color.red);
             if (Platformer.DEBUG_MODE) g.draw(shape);
-            g.drawImage(game.getTileset().getSubImage(0, 4), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(0, 4), shape.getX(), shape.getY());
         }
     }
 

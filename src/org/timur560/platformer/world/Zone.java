@@ -27,7 +27,7 @@ import java.util.Map;
  * Created by timur560 on 01.02.15.
  */
 public class Zone extends GameObject {
-    protected int id;
+    protected int id, tileset;
     protected Level level;
     protected float[] entryPoint = new float[]{0.0f, 0.0f};
     protected List<Shape> platforms;
@@ -280,5 +280,9 @@ public class Zone extends GameObject {
         for (int i = 0; i < width; i += size) {
             g.drawLine(i, 0, i, height);
         }
+    }
+
+    public int getTileset() {
+        return tileset;
     }
 }

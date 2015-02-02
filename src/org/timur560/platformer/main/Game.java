@@ -16,12 +16,14 @@ import java.awt.FontFormatException;
 import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game extends BasicGameState { // BasicGame
     protected Level level;
     protected Player player;
     protected StatusBar statusBar;
-    protected SpriteSheet tileset;
+    protected List<SpriteSheet> tilesets;
     protected TrueTypeFont font20, font;
 
     public StateBasedGame game;
@@ -30,7 +32,10 @@ public class Game extends BasicGameState { // BasicGame
 
     public Game() {
         try {
-            tileset = new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset1.png").getFile()), 50, 50);
+            tilesets = new ArrayList<>();
+            tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset1.png").getFile()), 50, 50));
+            tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset2.png").getFile()), 50, 50));
+            tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset3.png").getFile()), 50, 50));
             font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(18f), true);
         } catch (SlickException e) {
             e.printStackTrace();
@@ -115,8 +120,8 @@ public class Game extends BasicGameState { // BasicGame
         }
     }
 
-    public SpriteSheet getTileset() {
-        return tileset;
+    public SpriteSheet getTileset(int id) {
+        return tilesets.get(id);
     }
 
     public TrueTypeFont getFont() {

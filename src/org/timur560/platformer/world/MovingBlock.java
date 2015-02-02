@@ -37,7 +37,9 @@ public class MovingBlock extends GameObject {
         for (int i = 0; i < iterations; i++) {
             shape.setY(shape.getY() + vYtemp);
 
-            if (game.getLevel().collidesWith(shape)) {
+            if (game.getLevel().collidesWith(shape)
+                    // || game.getLevel().collidesWighMovingPlatform(shape) != null
+                    ) {
                 shape.setY(shape.getY() - vYtemp);
                 vY = 0;
                 break;
@@ -68,6 +70,6 @@ public class MovingBlock extends GameObject {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.setColor(Color.blue);
         if (Platformer.DEBUG_MODE) g.draw(shape);
-        g.drawImage(game.getTileset().getSubImage(0, 0), shape.getX() - 5, shape.getY() - 10);
+        g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(0, 0), shape.getX() - 5, shape.getY() - 10);
     }
 }

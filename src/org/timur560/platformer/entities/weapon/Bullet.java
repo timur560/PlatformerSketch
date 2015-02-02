@@ -53,9 +53,9 @@ public class Bullet extends GameObject {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (Platformer.DEBUG_MODE) g.draw(shape);
         if (weapon.getOwner() instanceof Player) {
-            g.drawImage(game.getTileset().getSubImage(2, 1), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(2, 1), shape.getX(), shape.getY());
         } else {
-            g.drawImage(game.getTileset().getSubImage(3, 1), shape.getX(), shape.getY());
+            g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(3, 1), shape.getX(), shape.getY());
         }
     }
 

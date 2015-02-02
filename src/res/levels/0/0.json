@@ -2,6 +2,7 @@
   "width": 65,
   "height" : 14,
   "effect" : "snow",
+  "tileset" : 1,
   "portals": [
     {
       "pos": [1, 10],

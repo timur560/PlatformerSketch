@@ -101,11 +101,11 @@ public abstract class Enemy extends GameObject implements Active {
 
     protected Image getSprite() {
         if (type.equals("snowflake")) {
-            return game.getTileset().getSubImage(0, 1);
+            return game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(0, 1);
         } else if (type.equals("snowman") && direction == LEFT) {
-            return game.getTileset().getSubImage(3, 0);
+            return game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(3, 0);
         } else if (type.equals("snowman") && direction == RIGHT) {
-            return game.getTileset().getSubImage(4, 0);
+            return game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(4, 0);
         }
 
         return null;

@@ -1,0 +1,74 @@
+{
+  "width": 38,
+  "height" : 25,
+  "effect" : "snow",
+  "tileset" : 1,
+  "portals": [
+    {
+      "pos": [0, 2],
+      "dest": [1, 0, 0]
+    },
+    {
+      "pos": [8, 5],
+      "dest": [2, 0, 0],
+      "wall": [10, 7, 3],
+      "terminal": [9, 13]
+    }
+  ],
+  "ladders" : [
+    [27, 20, 4],
+    [35, 10, 4],
+    [15, 10, 4],
+    [5,6,4]
+  ],
+  "enemies" : [
+    {
+      "rect" : [1.0, 1.0, 0.0, 0.0],
+      "path" : [[6, 22], [11, 22]],
+      "speed" : 0.2,
+      "canDie" : false,
+      "weapon" : false,
+      "type" : "snowflake",
+      "direction" : 4
+    },
+    {
+      "rect" : [0.6, 1.0, 0.0, 0.0],
+      "path" : [[19, 22], [23, 22]],
+      "speed" : 0.1,
+      "canDie" : true,
+      "weapon" : true,
+      "type" : "snowman",
+      "shootDelay" : 2000,
+      "direction" : 4
+    }
+  ],
+  "shapes" : [
+    [0, 25, 5, 25],
+  ],
+  "movingPlatforms" : [
+    {
+      "path" : [[3,23], [5,23], [5,19], [5,23]],
+      "width" : 2,
+      "speed" : 0.1
+    }
+  ],
+  "movingBlocks" : [
+    [2, 21],
+    [4, 23]
+  ],
+  "hints" : [
+
+  ],
+  "hearts" : [
+    {
+      "pos" : [2, 23],
+      "secret" : "box",
+      "fake" : true
+    },
+    {
+      "pos" : [4, 23],
+      "secret" : "snowheap",
+      "fake" : false
+    }
+  ]
+}

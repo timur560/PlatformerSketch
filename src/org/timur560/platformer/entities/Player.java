@@ -73,6 +73,10 @@ public class Player extends GameObject implements Active {
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
+        Level level = game.getLevel();
+
+        if (level.getTimeLeft() <= 0) die(); // :( ooops...
+
         if (animateTeleport) {
             t += teleportSpeed / delta;
 
@@ -85,8 +89,6 @@ public class Player extends GameObject implements Active {
             }
             else return;
         }
-
-        Level level = game.getLevel();
 
         // ladder collision
         if (gc.getInput().isKeyDown(Input.KEY_UP)) {

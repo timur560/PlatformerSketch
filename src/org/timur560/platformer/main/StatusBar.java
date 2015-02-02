@@ -34,12 +34,20 @@ public class StatusBar extends GameObject {
         float[] offset = game.getOffset();
 
         // hearts
-        g.drawImage(game.getTileset().getSubImage(0, 4), Helper.offsetValues(10, 10, offset)[0], Helper.offsetValues(10, 10, offset)[1]);
+        g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(0, 4), Helper.offsetValues(10, 10, offset)[0], Helper.offsetValues(10, 10, offset)[1]);
         g.setColor(Color.white);
         game.getFont().drawString(Helper.offsetValues(40, 8, offset)[0], Helper.offsetValues(40, 8, offset)[1], heartsCollected + "/" + heartsTotal);
 
+        // time
+        long ts = game.getLevel().getTimeLeft() / 1000;
+        String time = ts / 60 + " : " + ts % 60;
+        game.getFont().drawString(
+                Helper.offsetValues((Platformer.WIDTH - game.getFont().getWidth(time)) / 2, 8, offset)[0],
+                Helper.offsetValues((Platformer.WIDTH - game.getFont().getWidth(time)) / 2, 8, offset)[1],
+                time);
+
         // health
-        g.drawImage(game.getTileset().getSubImage(3, 3),
+        g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(3, 3),
                 Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[0],
                 Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[1]);
         game.getFont().drawString(
