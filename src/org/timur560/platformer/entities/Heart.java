@@ -58,13 +58,15 @@ public class Heart extends GameObject {
             if (gc.getInput().isKeyDown(Input.KEY_C) || gc.getInput().isButton2Pressed(0)) { // open secret
                 if (secretShape != null && secretShape.intersects(game.getPlayer().getShape())) {
                     opened = true;
+                    game.getSound("open").playAsSoundEffect(1.0f, game.getSfGain(), false);
                     shape.setY(shape.getY() + 50);
                     animate = true;
                 }
             }
         } else {
-            if (game.getPlayer().getShape().intersects(shape) && !collected) {
+            if (game.getPlayer().getShape().intersects(shape) && !collected && !fake) {
                 collected = true;
+                game.getSound("pickup").playAsSoundEffect(1.0f, game.getSfGain(), false);
             }
         }
     }

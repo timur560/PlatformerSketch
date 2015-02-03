@@ -46,7 +46,7 @@ public class Player extends GameObject implements Active {
     private boolean animateTeleport;
     private float[] teleportFrom;
     private float[] teleportTo;
-    private float t = 0, teleportSpeed = 0.4f;
+    private float t = 0, teleportSpeed = 0.3f;
 
     public Player(Game g) throws SlickException {
         super(g);
@@ -155,6 +155,8 @@ public class Player extends GameObject implements Active {
                     || mb != null
                     || level.collidesWighMovingPlatform(shape) != null) {
                 vY = jumpStrength;
+                // play sound
+                game.getSound("jump").playAsSoundEffect(1.0f, game.getSfGain(), false);
             }
 
 //            if (l != null && l.getShape().getY() < shape.getY() + shape.getHeight()) {
@@ -275,6 +277,7 @@ public class Player extends GameObject implements Active {
         teleportFrom = new float[]{x1, y1};
         teleportTo = new float[]{x2, y2};
         animateTeleport = true;
+        game.getSound("teleport").playAsSoundEffect(1.0f, game.getSfGain(), false);
     }
 
     public void decreaseHealth() {
@@ -282,14 +285,15 @@ public class Player extends GameObject implements Active {
             health--;
             vY = -10; // jumpStrength;
             if (health <= 0) die();
+            else game.getSound("damage").playAsSoundEffect(1.0f, game.getSfGain(), false);
             prevDecreaseHealh = System.currentTimeMillis();
         }
     }
 
     public void die() {
         dead = true;
+        game.getSound("die").playAsSoundEffect(1.0f, game.getSfGain(), false);
         health = 10;
-        System.out.println("You dead :(");
         game.game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
     }
 

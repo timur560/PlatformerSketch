@@ -53,6 +53,19 @@ public class Gun extends Weapon implements Shootable {
             }
 
             bullets.add(new Bullet(game, this, s.getX() + 15, s.getY() + 15, destX + 20, destY + 20));
+
+            float distanceX = game.getPlayer().getShape().getX() - s.getX();
+            float distanceY = game.getPlayer().getShape().getY() - s.getY();
+
+            float distance = (float) Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            float maxDistance = (float) Math.sqrt(Platformer.WIDTH * Platformer.WIDTH + Platformer.HEIGHT * Platformer.HEIGHT);
+
+            if (distance < maxDistance) {
+                float gain = game.getSfGain() * (1 - distance / maxDistance);
+                if (owner instanceof Enemy) game.getSound("enemyshoot").playAsSoundEffect(1.0f, gain, false);
+                if (owner instanceof Player) game.getSound("playershoot").playAsSoundEffect(1.0f, gain, false);
+            }
         }
     }
 

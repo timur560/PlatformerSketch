@@ -53,6 +53,7 @@ public class ActionTerminal extends GameObject {
         if (state == STATE_INACTIVE) return;
         if (state == STATE_CLOSED) state = STATE_OPENED;
         else state = STATE_CLOSED;
+        game.getSound("openterminal").playAsSoundEffect(1.0f, game.getSfGain(), false);
     }
 
     public int getState() {

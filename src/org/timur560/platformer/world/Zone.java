@@ -142,8 +142,6 @@ public class Zone extends GameObject {
             }
         }
 
-        System.out.println("Entry point: " + entryPoint[0] + ":" + entryPoint[1]);
-
         // hearts
         hearts = new ArrayList<>();
 

@@ -1,6 +1,8 @@
 package org.timur560.platformer.main;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -10,14 +12,14 @@ import org.newdawn.slick.util.ResourceLoader;
 import org.timur560.platformer.Platformer;
 import org.timur560.platformer.entities.Player;
 import org.timur560.platformer.world.Level;
-import org.timur560.platformer.world.MovingPlatform;
 
 import java.awt.FontFormatException;
 import java.awt.Font;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Game extends BasicGameState { // BasicGame
     protected Level level;
@@ -25,17 +27,34 @@ public class Game extends BasicGameState { // BasicGame
     protected StatusBar statusBar;
     protected List<SpriteSheet> tilesets;
     protected TrueTypeFont font, fontBig, fontSmall;
+    protected Map<String, Audio> sounds;
 
     public StateBasedGame game;
+    private float sfGain = 0.6f;
 
     public static int ID = 1;
 
     public Game() {
         try {
+            // tilesets
             tilesets = new ArrayList<>();
             tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset1.png").getFile()), 50, 50));
             tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset2.png").getFile()), 50, 50));
             tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset3.png").getFile()), 50, 50));
+
+            // sounds
+            sounds = new HashMap<>();
+            sounds.put("jump", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/jump.ogg")));
+            sounds.put("enemyshoot", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/enemyshoot.ogg")));
+            sounds.put("playershoot", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/playershoot.ogg")));
+            sounds.put("pickup", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/pickup.ogg")));
+            sounds.put("die", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/die.ogg")));
+            sounds.put("damage", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/damage.ogg")));
+            sounds.put("open", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/open.ogg")));
+            sounds.put("openterminal", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/openterminal.ogg")));
+            sounds.put("teleport", AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream("res/sounds/teleport.ogg")));
+
+            // fonts
             font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(18f), true);
             fontBig = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(22f), true);
             fontSmall = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(14f), true);
@@ -130,6 +149,10 @@ public class Game extends BasicGameState { // BasicGame
         return tilesets.get(id);
     }
 
+    public Audio getSound(String s) {
+        return sounds.get(s);
+    }
+
     public TrueTypeFont getFont(String size) {
         if (size.equals("big")) {
             return fontBig;
@@ -147,5 +170,9 @@ public class Game extends BasicGameState { // BasicGame
     public void goToLevel(int level) {
         ((Platformer) game).setCurrentLevel(level);
         game.enterState(Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+    }
+
+    public float getSfGain() {
+        return sfGain;
     }
 }

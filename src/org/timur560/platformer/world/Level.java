@@ -2,9 +2,12 @@ package org.timur560.platformer.world;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.util.ResourceLoader;
 import org.stringtree.json.JSONReader;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -57,6 +60,16 @@ public class Level {
 
         int i;
         for (i = 0; i < (Long) params.get("zones"); i++) zones.add(new Zone(game, this, i));
+
+        Thread t = new Thread(() -> {
+            try {
+                Music music = new Music("res/sounds/music" + ((Long) params.get("music")).toString() + ".ogg");
+                music.loop();
+            } catch (SlickException e) {
+                e.printStackTrace();
+            }
+        });
+        t.start();
 
     }
 

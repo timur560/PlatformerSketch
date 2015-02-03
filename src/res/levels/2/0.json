@@ -133,7 +133,7 @@
       "weapon" : false,
       "type" : "none",
       "direction" : 4
-    },
+    }
 
   ],
   "shapes" : [
@@ -167,9 +167,9 @@
   ],
   "movingPlatforms" : [
     {
-      "path" : [[18,26], [22,26]],
+      "path" : [[18,26], [20,26]],
       "width" : 1,
-      "speed" : 0.1
+      "speed" : 0.2
     },
     {
       "path" : [[2,16], [4,16]],
@@ -342,6 +342,6 @@
       "pos" : [28,3],
       "secret" : "snowheap",
       "fake" : true
-    },
+    }
   ]
 }
