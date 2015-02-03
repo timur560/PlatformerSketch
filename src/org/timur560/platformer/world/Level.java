@@ -63,7 +63,7 @@ public class Level {
 
         Thread t = new Thread(() -> {
             try {
-                Music music = new Music("res/sounds/music" + ((Long) params.get("music")).toString() + ".ogg");
+                Music music = new Music("res/sounds/music.ogg"); // ((Long) params.get("music")).toString()
                 music.loop();
             } catch (SlickException e) {
                 e.printStackTrace();

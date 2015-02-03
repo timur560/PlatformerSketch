@@ -146,7 +146,7 @@ public class Game extends BasicGameState { // BasicGame
     }
 
     public SpriteSheet getTileset(int id) {
-        return tilesets.get(id);
+        return tilesets.get(id - 1);
     }
 
     public Audio getSound(String s) {

@@ -77,6 +77,7 @@ public class Zone extends GameObject {
         width = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[0];
         height = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[1];
         effect = (String) params.get("effect");
+        tileset = ((Long) params.get("tileset")).intValue();
 
         // platforms
         platforms = new ArrayList<Shape>();
