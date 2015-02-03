@@ -44,7 +44,7 @@ public class Portal extends GameObject {
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
-        if (gc.getInput().isKeyDown(Input.KEY_C)) {
+        if (gc.getInput().isKeyDown(Input.KEY_C) || gc.getInput().isButtonPressed(1, 0)) {
             if (prevToggle != 0 && System.currentTimeMillis() < prevToggle + delay) {
                 return;
             }

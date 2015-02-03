@@ -41,9 +41,9 @@ public class StatusBar extends GameObject {
         // time
         long ts = game.getLevel().getTimeLeft() / 1000;
         String time = ts / 60 + " : " + ts % 60;
-        game.getFont().drawString(
-                Helper.offsetValues((Platformer.WIDTH - game.getFont().getWidth(time)) / 2, 8, offset)[0],
-                Helper.offsetValues((Platformer.WIDTH - game.getFont().getWidth(time)) / 2, 8, offset)[1],
+        game.getFont("big").drawString(
+                Helper.offsetValues((Platformer.WIDTH - game.getFont("big").getWidth(time)) / 2, 8, offset)[0],
+                Helper.offsetValues((Platformer.WIDTH - game.getFont("big").getWidth(time)) / 2, 8, offset)[1],
                 time);
 
         // health

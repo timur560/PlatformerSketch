@@ -55,7 +55,7 @@ public class Heart extends GameObject {
         }
 
         if (!opened) {
-            if (gc.getInput().isKeyDown(Input.KEY_C)) { // open secret
+            if (gc.getInput().isKeyDown(Input.KEY_C) || gc.getInput().isButton2Pressed(0)) { // open secret
                 if (secretShape != null && secretShape.intersects(game.getPlayer().getShape())) {
                     opened = true;
                     shape.setY(shape.getY() + 50);

@@ -11,5 +11,6 @@
     <orderEntry type="library" name="lwjgl1" level="project" />
     <orderEntry type="library" name="stringtree-json-2.0.5" level="project" />
     <orderEntry type="library" name="stringtree-json-2.0.51" level="project" />
+    <orderEntry type="library" name="jinput" level="project" />
   </component>
 </module>

@@ -24,7 +24,7 @@ public class Game extends BasicGameState { // BasicGame
     protected Player player;
     protected StatusBar statusBar;
     protected List<SpriteSheet> tilesets;
-    protected TrueTypeFont font20, font;
+    protected TrueTypeFont font, fontBig, fontSmall;
 
     public StateBasedGame game;
 
@@ -37,6 +37,8 @@ public class Game extends BasicGameState { // BasicGame
             tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset2.png").getFile()), 50, 50));
             tilesets.add(new SpriteSheet(new Image(ResourceLoader.getResource("res/images/tileset3.png").getFile()), 50, 50));
             font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(18f), true);
+            fontBig = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(22f), true);
+            fontSmall = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/fonts/CraftyGirls.ttf")).deriveFont(14f), true);
         } catch (SlickException e) {
             e.printStackTrace();
         } catch (FontFormatException e) {
@@ -91,6 +93,18 @@ public class Game extends BasicGameState { // BasicGame
 
     @Override
     public void update(GameContainer gc, StateBasedGame stateBasedGame, int delta) throws SlickException {
+        if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+            game.enterState(Menu.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+        }
+
+        if (gc.getInput().isKeyPressed(Input.KEY_F) || gc.getInput().isButtonPressed(6, 0)) {
+            try {
+                Platformer.app.setDisplayMode(Platformer.WIDTH, Platformer.HEIGHT, !Platformer.app.isFullscreen());
+            } catch (SlickException e) {
+                e.printStackTrace();
+            }
+        }
+
         level.update(gc, delta);
         player.update(gc, delta);
         statusBar.update(gc, delta);
@@ -112,27 +126,22 @@ public class Game extends BasicGameState { // BasicGame
         statusBar.render(gc, g);
     }
 
-    public void keyReleased(int key, char c) {
-        switch (key) {
-            case Input.KEY_ESCAPE:
-                game.enterState(Menu.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
-                break;
-            case Input.KEY_F:
-                try {
-                    Platformer.app.setDisplayMode(Platformer.WIDTH, Platformer.HEIGHT, !Platformer.app.isFullscreen());
-                } catch (SlickException e) {
-                    e.printStackTrace();
-                }
-                break;
-        }
-    }
-
     public SpriteSheet getTileset(int id) {
         return tilesets.get(id);
     }
 
+    public TrueTypeFont getFont(String size) {
+        if (size.equals("big")) {
+            return fontBig;
+        } else if (size.equals("small")) {
+            return fontSmall;
+        } else {
+            return font;
+        }
+    }
+
     public TrueTypeFont getFont() {
-        return font;
+        return getFont("");
     }
 
     public void goToLevel(int level) {

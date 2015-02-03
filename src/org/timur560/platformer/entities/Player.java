@@ -51,7 +51,7 @@ public class Player extends GameObject implements Active {
     public Player(Game g) throws SlickException {
         super(g);
         float[] pos = game.getLevel().getZone().getPortals().get(0).getPos();
-        shape = new Rectangle(pos[0], pos[1], 30, 45);
+        shape = new Rectangle(pos[0], pos[1], 20, 42);
         setWeapon(new Gun(game, this));
     }
 
@@ -92,7 +92,7 @@ public class Player extends GameObject implements Active {
         }
 
         // ladder collision
-        if (gc.getInput().isKeyDown(Input.KEY_UP)) {
+        if (gc.getInput().isKeyDown(Input.KEY_UP) || gc.getInput().isControllerUp(0)) {
             direction = UP;
             current = moveLadder;
             if (level.collidesWithLadder(shape) != null) {
@@ -103,7 +103,7 @@ public class Player extends GameObject implements Active {
             if (level.collidesWith(shape)) {
                 shape.setY(shape.getY() + speed);
             }
-        } else if (gc.getInput().isKeyDown(Input.KEY_DOWN)) {
+        } else if (gc.getInput().isKeyDown(Input.KEY_DOWN) || gc.getInput().isControllerDown(0)) {
             direction = DOWN;
             shape.setY(shape.getY() + speed);
             current = moveLadder;
@@ -142,7 +142,7 @@ public class Player extends GameObject implements Active {
 
         // Y acceleration
         vY += gravity;
-        if (gc.getInput().isKeyDown(Input.KEY_Z)) { // jump
+        if (gc.getInput().isKeyDown(Input.KEY_Z) || gc.getInput().isButton1Pressed(0)) { // jump
             shape.setY(shape.getY() + 0.5f);
 
             MovingBlock mb = level.collidesWithMovingBlock(shape);
@@ -165,13 +165,13 @@ public class Player extends GameObject implements Active {
         }
 
         // X acceleration
-        if (gc.getInput().isKeyDown(Input.KEY_LEFT)) {
+        if (gc.getInput().isKeyDown(Input.KEY_LEFT) || gc.getInput().isControllerLeft(0)) {
             direction = LEFT;
             current = ((int) vY == 0) ? moveLeft : jumpLeft;
             if (currentSpeed >= -speed) {
                 currentSpeed -= inertion;
             }
-        } else if (gc.getInput().isKeyDown(Input.KEY_RIGHT)) {
+        } else if (gc.getInput().isKeyDown(Input.KEY_RIGHT) || gc.getInput().isControllerRight(0)) {
             direction = RIGHT;
             current = ((int) vY == 0) ? moveRight : jumpRight;
             if (currentSpeed <= speed) {
@@ -214,7 +214,7 @@ public class Player extends GameObject implements Active {
         }
 
         // teleport
-        if (gc.getInput().isKeyDown(Input.KEY_C)
+        if ((gc.getInput().isKeyDown(Input.KEY_C) || gc.getInput().isButtonPressed(1, 0))
                 && (prevTeleport == 0 || System.currentTimeMillis() > prevTeleport + teleportDelay)) {
             for (Portal p : game.getLevel().getPortals()) {
                 if (p.getPortalShape().intersects(shape)) {
@@ -251,7 +251,7 @@ public class Player extends GameObject implements Active {
         }
 
         // shoot
-        if (gc.getInput().isKeyDown(Input.KEY_X)) {
+        if (gc.getInput().isKeyDown(Input.KEY_X) || gc.getInput().isButtonPressed(2, 0)) {
             weapon.act();
         }
 
@@ -261,7 +261,7 @@ public class Player extends GameObject implements Active {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.setColor(Color.blue);
         if (Platformer.DEBUG_MODE) g.draw(shape);
-        g.drawAnimation(current, shape.getX() - 7, shape.getY());
+        g.drawAnimation(current, shape.getX() - 12, shape.getY() - 3);
 
         weapon.render(gc, g);
     }

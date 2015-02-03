@@ -79,23 +79,17 @@ public class Splash extends BasicGameState {
         }
     }
 
-    public void keyReleased(int key, char c) {
-        switch (key) {
-            case Input.KEY_ENTER:
-                try {
-                    int gameId = org.timur560.platformer.main.Game.ID;
-                    game.getState(gameId).init(container, game);
-                    game.enterState(gameId, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
-                } catch (SlickException e) {
-                    e.printStackTrace();
-                }
-                break;
-        }
-    }
-
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
-
+        if (gc.getInput().isKeyPressed(Input.KEY_ENTER) || gc.getInput().isButtonPressed(11,0)) {
+            try {
+                int gameId = org.timur560.platformer.main.Game.ID;
+                game.getState(gameId).init(container, game);
+                game.enterState(gameId, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+            } catch (SlickException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

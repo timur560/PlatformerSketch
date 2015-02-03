@@ -45,6 +45,7 @@ public class Menu extends BasicGameState {
         }
 
         items.add("Play");
+        items.add("Controls");
         items.add("Quit");
         game = stateBasedGame;
     }
@@ -52,34 +53,25 @@ public class Menu extends BasicGameState {
     @Override
     public void update(GameContainer gc, StateBasedGame stateBasedGame, int i) throws SlickException {
 
-    }
-
-    public void keyReleased(int key, char c) {
-        switch(key) {
-            case Input.KEY_UP:
-                if (currentItemId > 0) {
-                    currentItemId--;
-                }
-                break;
-            case Input.KEY_DOWN:
-                if (currentItemId < items.size() - 1) {
-                    currentItemId++;
-                }
-                break;
-            case Input.KEY_ENTER:
-                switch (currentItemId) {
-                    case 0:
-                        // game.enterState(org.timur560.platformer.main.Game.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
-                        game.enterState(org.timur560.platformer.main.Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
-                        break;
-                    case 1:
-                        System.exit(0);
-                        break;
-                }
-
-                break;
-            default:
-                break;
+        if (gc.getInput().isKeyPressed(Input.KEY_UP) || gc.getInput().isControlPressed(2)) {
+            if (currentItemId > 0) {
+                currentItemId--;
+            }
+        } else if (gc.getInput().isKeyPressed(Input.KEY_DOWN) || gc.getInput().isControlPressed(3)) {
+            if (currentItemId < items.size() - 1) {
+                currentItemId++;
+            }
+        } else if (gc.getInput().isKeyPressed(Input.KEY_ENTER) || gc.getInput().isButtonPressed(11,0)) {
+            switch (currentItemId) {
+                case 0: // play
+                    game.enterState(org.timur560.platformer.main.Splash.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+                    break;
+                case 1:
+                    break;
+                case 2: // quit
+                    System.exit(0);
+                    break;
+            }
         }
     }
 
