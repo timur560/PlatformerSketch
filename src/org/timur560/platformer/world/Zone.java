@@ -155,7 +155,7 @@ public class Zone extends GameObject {
         // hints
         hints = new ArrayList<>();
 
-        for (Map hint : ((List<Map>) params.get("hints"))) {
+        if (params.get("hints") != null) for (Map hint : ((List<Map>) params.get("hints"))) {
             hints.add(new Hint(game, ((List<Long>) hint.get("pos")).get(0), ((List<Long>) hint.get("pos")).get(1),
                     (String) hint.get("text")));
         }
