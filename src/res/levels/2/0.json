@@ -1,7 +1,7 @@
 {
   "width": 30,
   "height" : 30,
-  "effect" : "snow",
+  "effect" : "none",
   "tileset" : 1,
   "portals": [
     {
