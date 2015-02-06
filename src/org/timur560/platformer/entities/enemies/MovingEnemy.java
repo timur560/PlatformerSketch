@@ -39,8 +39,8 @@ public class MovingEnemy extends Enemy {
         if (posIndex + 1 >= path.size()) currentPos = path.get(0);
         else currentPos = path.get(posIndex + 1);
 
-        float[] cp = Helper.cellsToPx(currentPos.get(0), currentPos.get(1) - 1);
-        float[] pp = Helper.cellsToPx(prevPos.get(0), prevPos.get(1) - 1);
+        float[] cp = Helper.cellsToPx(currentPos.get(0), currentPos.get(1));
+        float[] pp = Helper.cellsToPx(prevPos.get(0), prevPos.get(1));
 
         if (cp[0] < pp[0]) {
             direction = LEFT;
