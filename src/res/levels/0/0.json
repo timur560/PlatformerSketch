@@ -31,7 +31,7 @@
   "enemies" : [
     {
       "rect" : [1.0, 1.0, 0.0, 0.0],
-      "path" : [[31,4], [31,7]],
+      "path" : [[31,3], [31,6]],
       "speed" : 0.2,
       "canDie" : false,
       "weapon" : false,
@@ -40,7 +40,7 @@
     },
     {
       "rect" : [1.0, 1.0, 0.0, 0.0],
-      "path" : [[33,4], [33,7]],
+      "path" : [[33,3], [33,6]],
       "speed" : 0.3,
       "canDie" : false,
       "weapon" : false,
@@ -49,7 +49,7 @@
     },
     {
       "rect" : [1.0, 1.0, 0.0, 0.0],
-      "path" : [[35,4], [35,7]],
+      "path" : [[35,3], [35,6]],
       "speed" : 0.1,
       "canDie" : false,
       "weapon" : false,
@@ -74,7 +74,7 @@
     },
     {
       "rect" : [0.6, 1.0, 0.0, 0.0],
-      "path" : [[44, 9], [46, 9]],
+      "path" : [[44, 8], [46, 8]],
       "speed" : 0.1,
       "canDie" : true,
       "weapon" : true,
