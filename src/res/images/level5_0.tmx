@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="40" tilewidth="50" tileheight="50">
+ <tileset firstgid="1" name="tileset2" tilewidth="50" tileheight="50">
+  <image source="tileset2.png" width="300" height="300"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzdlksOgCAMRIkrE5d6/7OqOzNpoNPWYp2EHbz+gdZqa7/WQexfYK0kH8+jRjxWFXlSXno5G/Gs0tp8w16WzRliZy7q7JeUGcc9E9hbnv7KvlNYX5HH+CvVxcOTpOVp457lXxS/Ki9ypiz66xuxBbJ6/zRtzaT6Vu/hqBx7+99Sg+f+EyWxAjM=
+  </data>
+ </layer>
+ <layer name="active" width="20" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztlmEKgCAMhRcWO4F/9P73rMhRLGa1XlHRB2Mi+mTL5YieTRisHSwX72Hcm4r9rLHy0hjzXDEP1r4jetGhF4yxV89aw0WP1Zwnf7ImVlftIypD4L0DX6Ojqa7ES42drRUNK4/QS2A98Yi4dbwIPbGr4n6qHvIe3sH4/geaewL9z/45B+ItqH2TluYeTr89+lyrX0Pf17fpZWO8F6mfLZb5v7LOeldnBMU=
+  </data>
+ </layer>
+</map>
