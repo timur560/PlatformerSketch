@@ -227,7 +227,10 @@ public class Zone extends GameObject {
 
         if (effect.equals("snow")) {
             Helper.renderSnow(g, offset);
+        } else if (effect.equals("rain")) {
+            Helper.renderRain(g, offset);
         }
+
     }
 
     public int getId() {

@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.timur560.platformer.Platformer;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -69,5 +70,38 @@ public class Helper {
 
     public static float[] offsetValues(int x, int y, float[] offset) {
         return new float[]{x + offset[0] / Platformer.ZOOM, y + (offset[1] / Platformer.ZOOM)};
+    }
+
+    public static void renderRain(Graphics g, float[] offset) {
+        if (drops == null) { // fill array
+            int i;
+            Random r = new Random();
+            drops = new ArrayList<float[]>();
+
+            for (i = 0; i <= 300; i++) {
+                drops.add(new float[]{r.nextInt(Platformer.WIDTH), r.nextInt(Platformer.HEIGHT), r.nextInt(8) + 5});
+            }
+        }
+
+        // update positions
+        for (float[] d : drops) {
+            if (d[1] + ( d[2] / 5f ) > Platformer.HEIGHT) {
+                d[1] = 0;
+            } else {
+                d[1] += ( d[2] / 5f ) + 5;
+            }
+        }
+
+        // draw
+        g.setColor(new Color(0.5f,0.5f,1f,0.5f));
+        g.setLineWidth(2.0f);
+        for (float[] d : drops) {
+            g.drawLine(
+                    d[0] + offset[0] / Platformer.ZOOM,
+                    d[1] + (offset[1] / Platformer.ZOOM),
+                    d[0] + offset[0] / Platformer.ZOOM,
+                    d[1] + (offset[1] / Platformer.ZOOM) + d[2]);
+        }
+
     }
 }

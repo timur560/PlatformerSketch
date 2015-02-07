@@ -57,7 +57,7 @@ public class Player extends GameObject implements Active {
 
     public void init() throws SlickException {
         SpriteSheet sheet;
-        sheet = new SpriteSheet(new Image(ResourceLoader.getResource("res/images/player_sprite.png").getFile()), 45, 45);
+        sheet = new SpriteSheet(new Image(ResourceLoader.getResource("res/images/player" + game.getLevel().getZone().getTileset() + ".png").getFile()), 45, 45);
         int[] animationSpeed = new int[4];
         for (int i = 0; i <= 3; i++) animationSpeed[i] = 100;
 
