@@ -32,7 +32,7 @@ public class DisappearingPlatform extends GameObject {
         pos.add(y);
         width = w;
 
-        float[] fpos = Helper.cellsToPx(pos.get(0), pos.get(1) - 1);
+        float[] fpos = Helper.cellsToPx(pos.get(0), pos.get(1));
 
         shape = new Rectangle(fpos[0], fpos[1], Helper.CELL_SIZE * width, Helper.CELL_SIZE);
     }
