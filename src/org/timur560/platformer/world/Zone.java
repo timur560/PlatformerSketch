@@ -32,6 +32,7 @@ public class Zone extends GameObject {
     protected float[] entryPoint = new float[]{0.0f, 0.0f};
     protected List<Shape> platforms;
     protected List<MovingPlatform> movingPlatforms;
+    protected List<DisappearingPlatform> disappearingPlatforms;
     protected List<MovingBlock> movingBlocks;
     protected List<Ladder> ladders;
     protected List<Enemy> enemies;
@@ -167,6 +168,13 @@ public class Zone extends GameObject {
             movingPlatforms.add(new MovingPlatform(game, (List<List<Long>>) mp.get("path"), (Long) mp.get("width"), (Double) mp.get("speed")));
         }
 
+        // disappearing platforms
+        disappearingPlatforms = new ArrayList<>();
+
+        if (params.get("disappearingPlatforms") != null) for (List<Long> dp : ((List<List<Long>>) params.get("disappearingPlatforms"))) {
+            disappearingPlatforms.add(new DisappearingPlatform(game, dp.get(0), dp.get(1), dp.get(2)));
+        }
+
         // moving blocks (showballs)
         movingBlocks = new ArrayList<>();
 
@@ -193,6 +201,7 @@ public class Zone extends GameObject {
         for (Portal e : portals) e.update(gc, delta);
         for (Heart h : hearts) h.update(gc, delta);
         for (MovingPlatform mp: movingPlatforms) mp.update(gc, delta);
+        for (DisappearingPlatform dp: disappearingPlatforms) dp.update(gc, delta);
         for (MovingBlock mb: movingBlocks) mb.update(gc, delta);
     }
 
@@ -223,6 +232,7 @@ public class Zone extends GameObject {
         for (Heart h : hearts) h.render(gc, g);
         for (Hint h : hints) h.render(gc, g);
         for (MovingPlatform mp: movingPlatforms) mp.render(gc, g);
+        for (DisappearingPlatform dp: disappearingPlatforms) dp.render(gc, g);
         for (MovingBlock mb: movingBlocks) mb.render(gc, g);
 
         if (effect.equals("snow")) {
@@ -251,6 +261,10 @@ public class Zone extends GameObject {
 
     public List<MovingPlatform> getMovingPlatforms() {
         return movingPlatforms;
+    }
+
+    public List<DisappearingPlatform> getDisappearingPlatforms() {
+        return disappearingPlatforms;
     }
 
     public List<MovingBlock> getMovingBlocks() {

@@ -37,10 +37,16 @@ public class MovingBlock extends GameObject {
         for (int i = 0; i < iterations; i++) {
             shape.setY(shape.getY() + vYtemp);
 
-            if (game.getLevel().collidesWith(shape)
-                    // || game.getLevel().collidesWighMovingPlatform(shape) != null
-                    ) {
+            MovingPlatform mp = game.getLevel().collidesWithMovingPlatform(shape);
+
+            if (game.getLevel().collidesWith(shape) || mp != null) {
                 shape.setY(shape.getY() - vYtemp);
+
+                if (mp != null) {
+                    if (shape.getY() < mp.getShape().getY()) shape.setY(mp.getShape().getY() - shape.getHeight());
+                    else shape.setY(mp.getShape().getY() + mp.getShape().getHeight() + 2);
+                }
+
                 vY = 0;
                 break;
             }

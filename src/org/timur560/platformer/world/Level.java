@@ -103,11 +103,12 @@ public class Level {
         if (s.getX() < 0 || s.getX() + s.getWidth() > z.getWidth()) return true;
         for (Shape p : z.getPlatforms()) if (p.intersects(s)) return true;
         for (Portal p : z.getPortals()) if (p.intersects(s)) return true;
+        for (DisappearingPlatform d: z.getDisappearingPlatforms()) if (d.collidesWith(s)) return true;
 
         return false;
     }
 
-    public MovingPlatform collidesWighMovingPlatform (Shape s) {
+    public MovingPlatform collidesWithMovingPlatform(Shape s) {
         for (MovingPlatform mp : zones.get(currentZone).getMovingPlatforms()) {
             if (mp.getShape().intersects(s)) return mp;
         }

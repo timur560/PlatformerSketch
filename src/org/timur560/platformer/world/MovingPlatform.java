@@ -48,6 +48,7 @@ public class MovingPlatform extends GameObject {
                 && ps.getX() < shape.getX() + shape.getWidth()) {
             movePlayer = true;
         }
+
         float[] cp = Helper.cellsToPx(currentPos.get(0), currentPos.get(1) - 1);
         float[] pp = Helper.cellsToPx(prevPos.get(0), prevPos.get(1) - 1);
 
@@ -68,6 +69,11 @@ public class MovingPlatform extends GameObject {
         // update player X coordinate
         if (movePlayer) {
             ps.setX(ps.getX() + (shape.getX() - prevX));
+        }
+
+        MovingBlock mb = game.getLevel().collidesWithMovingBlock(shape);
+        if (mb != null) {
+            mb.getShape().setX(mb.getShape().getX() + (shape.getX() - prevX));
         }
     }
 

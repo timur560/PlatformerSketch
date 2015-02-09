@@ -1,0 +1,7 @@
+{"tileset":2,"movingBlocks":[[8,12]],"shapes":[[0,15,4,15],[0,5,3,5],[3,7,4,7],[8,14,10,14],[4,19,11,19],[5,10,10,10],[12,15,22,15],[21,8,24,8]],"ladders":[[10,13,5]],"effect":"none","portals":[{"pos":[2,13],"dest":[6,0,0]}],"width":40,"hearts":[{"pos":[0,3],"fake":false,"secret":"box"},{"pos":[1,3],"fake":false,"secret":"box"},{"pos":[2,3],"fake":false,"secret":"box"},{"pos":[0,13],"fake":false,"secret":"snowheap"},{"pos":[21,6],"fake":false,"secret":"box"},{"pos":[22,6],"fake":false,"secret":"box"},{"pos":[23,6],"fake":false,"secret":"box"},{"pos":[8,8],"fake":true,"secret":"snowheap"},{"pos":[5,8],"fake":false,"secret":"snowheap"}],"movingPlatforms":[{"path":[[8,16],[5,16],[5,12],[11,12],[11,8],[9,8],[11,8],[11,12],[5,12],[5,16]],"width":2,"speed":0.2}],"enemies":[{"path":[[19,4],[25,4],[25,9],[19,9]],"rect":[1.0,1.0,0.0,0.0],"weapon":false,"canDie":false,"type":"snowflake","speed":0.2}],"height":20,
+"disappearingPlatforms":[
+  [18,13,1],
+  [16,11,1],
+  [18,9,1]
+]
+}

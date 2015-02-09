@@ -2,7 +2,6 @@ package org.timur560.platformer.entities;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.ResourceLoader;
@@ -10,7 +9,6 @@ import org.newdawn.slick.util.ResourceLoader;
 import org.timur560.platformer.Platformer;
 import org.timur560.platformer.core.Active;
 import org.timur560.platformer.core.GameObject;
-import org.timur560.platformer.core.Helper;
 import org.timur560.platformer.entities.weapon.Gun;
 import org.timur560.platformer.entities.weapon.Weapon;
 import org.timur560.platformer.main.Splash;
@@ -19,8 +17,6 @@ import org.timur560.platformer.world.Level;
 import org.timur560.platformer.main.Game;
 import org.timur560.platformer.world.MovingBlock;
 import org.timur560.platformer.world.MovingPlatform;
-
-import java.util.List;
 
 public class Player extends GameObject implements Active {
     protected float gravity       = 0.7f;
@@ -121,7 +117,7 @@ public class Player extends GameObject implements Active {
         for (int i = 0; i < iterations; i++) {
             shape.setY(shape.getY() + vYtemp);
 
-            MovingPlatform mp = level.collidesWighMovingPlatform(shape);
+            MovingPlatform mp = level.collidesWithMovingPlatform(shape);
             MovingBlock mb = level.collidesWithMovingBlock(shape);
 
             if (level.collidesWith(shape)
@@ -153,7 +149,7 @@ public class Player extends GameObject implements Active {
             if (level.collidesWith(shape)
                     || (l != null && l.getShape().getY() >= shape.getY() - 0.5f + shape.getHeight())
                     || mb != null
-                    || level.collidesWighMovingPlatform(shape) != null) {
+                    || level.collidesWithMovingPlatform(shape) != null) {
                 vY = jumpStrength;
                 // play sound
                 game.getSound("jump").playAsSoundEffect(1.0f, game.getSfGain(), false);
@@ -202,7 +198,7 @@ public class Player extends GameObject implements Active {
         for (int i = 0; i < iterations; i++) {
             shape.setX( shape.getX() + vXtemp );
 
-            MovingPlatform mp = level.collidesWighMovingPlatform(shape);
+            MovingPlatform mp = level.collidesWithMovingPlatform(shape);
 
             if (level.collidesWith(shape)) {
                 shape.setX( shape.getX() - vXtemp );
