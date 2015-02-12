@@ -187,10 +187,10 @@ public class Zone extends GameObject {
             disappearingPlatforms.add(new DisappearingPlatform(game, dp.get(0), dp.get(1), dp.get(2)));
         }
 
-        // moving blocks (showballs)
+        // moving blocks
         movingBlocks = new ArrayList<>();
 
-        for (List mb : ((List<List>) params.get("movingBlocks"))) {
+        if (params.get("movingBlocks") != null) for (List mb : ((List<List>) params.get("movingBlocks"))) {
             movingBlocks.add(new MovingBlock(game, (Long) mb.get(0), (Long) mb.get(1)));
         }
     }
@@ -219,13 +219,15 @@ public class Zone extends GameObject {
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
+
+
         float[] offset = game.getOffset();
 
         float bgX = offset[0] * ((width - bg.getWidth())) / (width - Platformer.WIDTH);
         float bgY = offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
 
         // parallax background
-        g.drawImage(bg, bgX / getZoom(), bgY / getZoom());
+        // g.drawImage(bg, bgX / getZoom(), bgY / getZoom());
 
         // level static objects image
         g.drawImage(cover, 0, 0);
