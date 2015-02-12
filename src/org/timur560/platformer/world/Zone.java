@@ -39,7 +39,7 @@ public class Zone extends GameObject {
     protected List<Portal> portals;
     protected List<Heart> hearts;
     protected List<Hint> hints;
-    protected float width, height;
+    protected float width, height, zoom = 1.0f;
     protected Image bg, cover; // tmp
     protected String effect;
 
@@ -77,6 +77,18 @@ public class Zone extends GameObject {
 
         width = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[0];
         height = Helper.cellsToPx(((Long) params.get("width")).floatValue(), ((Long) params.get("height")).floatValue())[1];
+        if (width < Platformer.WIDTH && height < Platformer.HEIGHT) {
+            if (Platformer.WIDTH - width > Platformer.HEIGHT - height) {
+                zoom = (float) Platformer.WIDTH / width;
+            } else {
+                zoom = (float) Platformer.HEIGHT / height;
+            }
+        } else if (width < Platformer.WIDTH) {
+            zoom = (float) Platformer.WIDTH / width;
+        } else if (height < Platformer.HEIGHT) {
+            zoom = (float) Platformer.HEIGHT / height;
+        }
+
         effect = (String) params.get("effect");
         tileset = ((Long) params.get("tileset")).intValue();
 
@@ -91,7 +103,7 @@ public class Zone extends GameObject {
         // ladders
         ladders = new ArrayList<Ladder>();
 
-        for (List<Long> vertices : (List<List<Long>>) params.get("ladders")) {
+        if (params.get("ladders") != null) for (List<Long> vertices : (List<List<Long>>) params.get("ladders")) {
             ladders.add(new Ladder(game, vertices.get(0), vertices.get(1), vertices.get(2)));
         }
 
@@ -213,7 +225,7 @@ public class Zone extends GameObject {
         float bgY = offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
 
         // parallax background
-        g.drawImage(bg, bgX, bgY);
+        g.drawImage(bg, bgX / getZoom(), bgY / getZoom());
 
         // level static objects image
         g.drawImage(cover, 0, 0);
@@ -300,5 +312,9 @@ public class Zone extends GameObject {
 
     public int getTileset() {
         return tileset;
+    }
+
+    public float getZoom() {
+        return zoom;
     }
 }

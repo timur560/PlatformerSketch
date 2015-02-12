@@ -42,16 +42,16 @@ public class Hint extends GameObject {
             g.setColor(new Color(255, 255, 25, 0.7f));
 
             g.fill(new RoundedRectangle(
-                    Helper.offsetValues((int) (Platformer.WIDTH / Platformer.ZOOM - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[0] - 20,
-                    Helper.offsetValues((int) (Platformer.WIDTH / Platformer.ZOOM - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[1] - 20,
+                    Helper.offsetValues((int) (Platformer.WIDTH / game.getLevel().getZone().getZoom() - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[0] - 20,
+                    Helper.offsetValues((int) (Platformer.WIDTH / game.getLevel().getZone().getZoom() - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[1] - 20,
                     game.getFont().getWidth(text) + 40,
                     game.getFont().getHeight() + 40,
                     10
             ));
 
             game.getFont().drawString(
-                    Helper.offsetValues((int) (Platformer.WIDTH / Platformer.ZOOM - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[0],
-                    Helper.offsetValues((int) (Platformer.WIDTH / Platformer.ZOOM - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[1],
+                    Helper.offsetValues((int) (Platformer.WIDTH / game.getLevel().getZone().getZoom() - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[0],
+                    Helper.offsetValues((int) (Platformer.WIDTH / game.getLevel().getZone().getZoom() - game.getFont().getWidth(text)) / 2, 100, game.getOffset())[1],
                     text,
                     Color.black);
         }

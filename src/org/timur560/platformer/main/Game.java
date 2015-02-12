@@ -70,16 +70,16 @@ public class Game extends BasicGameState { // BasicGame
     public float[] getOffset() {
         float[] result = new float[]{0,0};
 
-        if (player.getX() - 300 / Platformer.ZOOM > level.getWidth() - Platformer.WIDTH / Platformer.ZOOM) result[0] = level.getWidth() - Platformer.WIDTH / Platformer.ZOOM;
-        else if (player.getX() < 300 / Platformer.ZOOM) result[0] = 0;
-        else result[0] = player.getX() - 300 / Platformer.ZOOM;
+        if (player.getX() - 300 / getLevel().getZone().getZoom() > level.getWidth() - Platformer.WIDTH / getLevel().getZone().getZoom()) result[0] = level.getWidth() - Platformer.WIDTH / getLevel().getZone().getZoom();
+        else if (player.getX() < 300 / getLevel().getZone().getZoom()) result[0] = 0;
+        else result[0] = player.getX() - 300 / getLevel().getZone().getZoom();
 
-        if (player.getY() - 300 / Platformer.ZOOM > level.getHeight() - Platformer.HEIGHT / Platformer.ZOOM) result[1] = level.getHeight() - Platformer.HEIGHT / Platformer.ZOOM;
-        else if (player.getY() < 300 / Platformer.ZOOM) result[1] = 0;
-        else result[1] = player.getY() - 300 / Platformer.ZOOM;
+        if (player.getY() - 300 / getLevel().getZone().getZoom() > level.getHeight() - Platformer.HEIGHT / getLevel().getZone().getZoom()) result[1] = level.getHeight() - Platformer.HEIGHT / getLevel().getZone().getZoom();
+        else if (player.getY() < 300 / getLevel().getZone().getZoom()) result[1] = 0;
+        else result[1] = player.getY() - 300 / getLevel().getZone().getZoom();
 
-        result[0] *= Platformer.ZOOM;
-        result[1] *= Platformer.ZOOM;
+        result[0] *= getLevel().getZone().getZoom();
+        result[1] *= getLevel().getZone().getZoom();
 
         return result;
     }
@@ -137,7 +137,7 @@ public class Game extends BasicGameState { // BasicGame
         g.translate(-offset[0], -offset[1]);
 
         g.setAntiAlias(false);
-        g.scale(Platformer.ZOOM, Platformer.ZOOM);
+        g.scale(getLevel().getZone().getZoom(), getLevel().getZone().getZoom());
 
         // render
         level.render(gc, g);

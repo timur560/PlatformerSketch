@@ -34,24 +34,28 @@ public class StatusBar extends GameObject {
         float[] offset = game.getOffset();
 
         // hearts
-        g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(0, 4), Helper.offsetValues(10, 10, offset)[0], Helper.offsetValues(10, 10, offset)[1]);
+        g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(0, 4),
+                Helper.offsetValues(10, 10, offset)[0] / game.getLevel().getZone().getZoom(),
+                Helper.offsetValues(10, 10, offset)[1] / game.getLevel().getZone().getZoom());
         g.setColor(Color.white);
-        game.getFont().drawString(Helper.offsetValues(40, 8, offset)[0], Helper.offsetValues(40, 8, offset)[1], heartsCollected + "/" + heartsTotal);
+        game.getFont().drawString(
+                Helper.offsetValues(40, 8, offset)[0] / game.getLevel().getZone().getZoom(),
+                Helper.offsetValues(40, 8, offset)[1] / game.getLevel().getZone().getZoom(), heartsCollected + "/" + heartsTotal);
 
         // time
         long ts = game.getLevel().getTimeLeft() / 1000;
         String time = ts / 60 + " : " + ts % 60;
         game.getFont("big").drawString(
-                Helper.offsetValues((Platformer.WIDTH - game.getFont("big").getWidth(time)) / 2, 8, offset)[0],
-                Helper.offsetValues((Platformer.WIDTH - game.getFont("big").getWidth(time)) / 2, 8, offset)[1],
+                Helper.offsetValues((Platformer.WIDTH - game.getFont("big").getWidth(time)) / 2, 8, offset)[0] / game.getLevel().getZone().getZoom(),
+                Helper.offsetValues((Platformer.WIDTH - game.getFont("big").getWidth(time)) / 2, 8, offset)[1] / game.getLevel().getZone().getZoom(),
                 time);
 
         // health
         g.drawImage(game.getTileset(game.getLevel().getZone().getTileset()).getSubImage(3, 3),
-                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[0],
-                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[1]);
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[0] / game.getLevel().getZone().getZoom(),
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 50, 10, offset)[1] / game.getLevel().getZone().getZoom());
         game.getFont().drawString(
-                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 25, 8, offset)[0],
-                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 25, 8, offset)[1], game.getPlayer().getHealth() + "");
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 25, 8, offset)[0] / game.getLevel().getZone().getZoom(),
+                Helper.offsetValues(Platformer.WIDTH - game.getFont().getWidth(game.getPlayer().getHealth() + "") - 25, 8, offset)[1] / game.getLevel().getZone().getZoom(), game.getPlayer().getHealth() + "");
     }
 }
