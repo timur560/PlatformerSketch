@@ -74,7 +74,7 @@ public class Helper {
         return new float[]{x + offset[0], y + (offset[1])};
     }
 
-    public static void renderRain(Graphics g, float[] offset) {
+    public static void renderRain(Graphics g, float[] offset, float zoom) {
         if (drops == null) { // fill array
             int i;
             Random r = new Random();
@@ -98,17 +98,11 @@ public class Helper {
         g.setColor(new Color(0.5f,0.5f,1f,0.5f));
         g.setLineWidth(2.0f);
         for (float[] d : drops) {
-//            g.drawLine(
-//                    d[0] + offset[0] / Platformer.ZOOM,
-//                    d[1] + (offset[1] / Platformer.ZOOM),
-//                    d[0] + offset[0] / Platformer.ZOOM,
-//                    d[1] + (offset[1] / Platformer.ZOOM) + d[2]);
-
             g.drawLine(
-                    d[0] + offset[0],
-                    d[1] + (offset[1]),
-                    d[0] + offset[0],
-                    d[1] + (offset[1]) + d[2]);
+                    d[0] + offset[0] / zoom,
+                    d[1] + (offset[1] / zoom),
+                    d[0] + offset[0] / zoom,
+                    d[1] + (offset[1] / zoom) + d[2]);
         }
 
     }

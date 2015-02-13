@@ -223,11 +223,13 @@ public class Zone extends GameObject {
 
         float[] offset = game.getOffset();
 
-        float bgX = offset[0] * ((width - bg.getWidth())) / (width - Platformer.WIDTH);
-        float bgY = offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
+        float bgX = (width == Platformer.WIDTH) ? 0
+                : offset[0] * ((width - bg.getWidth())) / (width - Platformer.WIDTH);
+        float bgY = (height == Platformer.HEIGHT) ? 0
+                : offset[1] * ((height - bg.getHeight())) / (height - Platformer.HEIGHT);
 
         // parallax background
-        // g.drawImage(bg, bgX / getZoom(), bgY / getZoom());
+        g.drawImage(bg, bgX / getZoom(), bgY / getZoom());
 
         // level static objects image
         g.drawImage(cover, 0, 0);
@@ -252,7 +254,7 @@ public class Zone extends GameObject {
         if (effect.equals("snow")) {
             Helper.renderSnow(g, offset);
         } else if (effect.equals("rain")) {
-            Helper.renderRain(g, offset);
+            Helper.renderRain(g, offset, getZoom());
         }
 
     }

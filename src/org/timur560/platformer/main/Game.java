@@ -1,8 +1,12 @@
 package org.timur560.platformer.main;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 import org.newdawn.slick.*;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.opengl.pbuffer.FBOGraphics;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -20,6 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 
 public class Game extends BasicGameState { // BasicGame
     protected Level level;
@@ -138,6 +146,8 @@ public class Game extends BasicGameState { // BasicGame
 
         g.setAntiAlias(false);
         g.scale(getLevel().getZone().getZoom(), getLevel().getZone().getZoom());
+
+
 
         // render
         level.render(gc, g);
